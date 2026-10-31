@@ -1,26 +1,220 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Design tokens: docs/05-design-system.md. Components use these, never raw hex. */
 :root {
+  --brand-pink: #fd267a;
+  --brand-orange: #ff6036;
+  --brand: #fe3c72;
+  --brand-hover: #e8336a;
+
+  --action-rewind: #f5b748;
+  --action-nope: #ff4458;
+  --action-super: #3ca4ff;
+  --action-like: #21d07c;
+  --action-boost: #a962f5;
+
   --background: #ffffff;
-  --foreground: #171717;
+  --surface: #f5f7fa;
+  --card: #ffffff;
+  --border: #e4e7eb;
+  --text: #21262e;
+  --text-secondary: #505965;
+  --text-muted: #7c8591;
+
+  --success: #21d07c;
+  --warning: #f5b748;
+  --danger: #ff4458;
+  --info: #3ca4ff;
+
+  /* skill category chips: soft background + strong text */
+  --chip-tech-bg: #e8f3ff;
+  --chip-tech-fg: #1b6fd1;
+  --chip-language-bg: #fff0f4;
+  --chip-language-fg: #d61f5b;
+  --chip-music-bg: #f4edff;
+  --chip-music-fg: #7b3fd1;
+  --chip-business-bg: #fff6e5;
+  --chip-business-fg: #b7791f;
+  --chip-creative-bg: #ffefea;
+  --chip-creative-fg: #d9481e;
+  --chip-fitness-bg: #e9fbf2;
+  --chip-fitness-fg: #14935a;
+  --chip-cooking-bg: #fff4e8;
+  --chip-cooking-fg: #c2620f;
+  --chip-other-bg: #f0f2f5;
+  --chip-other-fg: #505965;
+
+  /* shadcn/ui variable names mapped to our palette */
+  --foreground: var(--text);
+  --card-foreground: var(--text);
+  --popover: var(--card);
+  --popover-foreground: var(--text);
+  --primary: var(--brand);
+  --primary-foreground: #ffffff;
+  --secondary: var(--surface);
+  --secondary-foreground: var(--text);
+  --muted: var(--surface);
+  --muted-foreground: var(--text-muted);
+  --accent: #fff0f4;
+  --accent-foreground: var(--brand);
+  --destructive: var(--action-nope);
+  --input: var(--border);
+  --ring: var(--brand);
+  --radius: 0.875rem;
+
+  --chart-1: var(--brand-pink);
+  --chart-2: var(--brand-orange);
+  --chart-3: var(--action-super);
+  --chart-4: var(--action-like);
+  --chart-5: var(--action-boost);
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--text);
+  --sidebar-primary: var(--brand);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--brand);
+}
+
+.dark {
+  --background: #111418;
+  --surface: #1b1f24;
+  --card: #21262d;
+  --border: #30363d;
+  --text: #f1f3f5;
+  --text-secondary: #b4bcc6;
+  --text-muted: #8b949e;
+  --accent: #3a1a26;
+
+  --chip-tech-bg: #14263d;
+  --chip-tech-fg: #7db8f5;
+  --chip-language-bg: #3a1a26;
+  --chip-language-fg: #ff8fb3;
+  --chip-music-bg: #2a1d40;
+  --chip-music-fg: #c4a2f5;
+  --chip-business-bg: #3a2d12;
+  --chip-business-fg: #f0c470;
+  --chip-creative-bg: #3b2018;
+  --chip-creative-fg: #ff9a7a;
+  --chip-fitness-bg: #11301f;
+  --chip-fitness-fg: #6fe0a8;
+  --chip-cooking-bg: #3a2812;
+  --chip-cooking-fg: #f0a566;
+  --chip-other-bg: #2a2f36;
+  --chip-other-fg: #b4bcc6;
 }
 
 @theme inline {
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-pink: var(--brand-pink);
+  --color-brand-orange: var(--brand-orange);
+  --color-nope: var(--action-nope);
+  --color-like: var(--action-like);
+  --color-super: var(--action-super);
+  --color-rewind: var(--action-rewind);
+  --color-boost: var(--action-boost);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+
+  --color-chip-tech-bg: var(--chip-tech-bg);
+  --color-chip-tech-fg: var(--chip-tech-fg);
+  --color-chip-language-bg: var(--chip-language-bg);
+  --color-chip-language-fg: var(--chip-language-fg);
+  --color-chip-music-bg: var(--chip-music-bg);
+  --color-chip-music-fg: var(--chip-music-fg);
+  --color-chip-business-bg: var(--chip-business-bg);
+  --color-chip-business-fg: var(--chip-business-fg);
+  --color-chip-creative-bg: var(--chip-creative-bg);
+  --color-chip-creative-fg: var(--chip-creative-fg);
+  --color-chip-fitness-bg: var(--chip-fitness-bg);
+  --color-chip-fitness-fg: var(--chip-fitness-fg);
+  --color-chip-cooking-bg: var(--chip-cooking-bg);
+  --color-chip-cooking-fg: var(--chip-cooking-fg);
+  --color-chip-other-bg: var(--chip-other-bg);
+  --color-chip-other-fg: var(--chip-other-fg);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-surface: var(--surface);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --radius-sm: calc(var(--radius) - 8px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@utility bg-brand-gradient {
+  background-image: linear-gradient(
+    45deg,
+    var(--brand-pink) 0%,
+    var(--brand-orange) 100%
+  );
+}
+@utility text-brand-gradient {
+  background-image: linear-gradient(
+    45deg,
+    var(--brand-pink) 0%,
+    var(--brand-orange) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
 }
