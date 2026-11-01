@@ -12,6 +12,11 @@ import { buildMetadata, siteUrl } from "@/lib/seo";
 export const revalidate = 600;
 export const dynamicParams = true;
 
+// Nothing prebuilt: pages are generated on the first visit, then cached (ISR).
+export function generateStaticParams() {
+  return [];
+}
+
 const getProfile = (username: string) =>
   publicFetch<PublicProfileDto>(`/users/${username}`, {
     revalidate: 600,

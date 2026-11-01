@@ -9,6 +9,11 @@ import { buildMetadata } from "@/lib/seo";
 export const revalidate = 21600;
 export const dynamicParams = true;
 
+// Nothing prebuilt: pages are generated on the first visit, then cached (ISR).
+export function generateStaticParams() {
+  return [];
+}
+
 /** Fewer than this and the page is thin content: it stays out of search results. */
 const MIN_TEACHERS_TO_INDEX = 3;
 
