@@ -12,7 +12,15 @@ export interface AvailabilitySlotDto {
      * @maximum 6
      */
   dayOfWeek: number;
-  /** Minutes from midnight */
+  /**
+     * Minutes from midnight
+     * @minimum 0
+     * @maximum 1439
+     */
   startMin: number;
+  /**
+     * @minimum 1
+     * @maximum 1440
+     */
   endMin: number;
 }

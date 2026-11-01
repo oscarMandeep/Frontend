@@ -5,22 +5,30 @@
  * OpenAPI spec version: 1
  */
 import {
+  useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
+  MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query';
 
 import type {
-  MeDto
+  AvailabilitySlotDto,
+  MeDto,
+  UpdateAvailabilityDto,
+  UpdateMeDto,
+  UpdateSkillsDto
 } from '../model';
 
 import { apiFetch } from '../../fetcher';
@@ -151,3 +159,361 @@ export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = unk
 
 
 
+export type updateMeResponse200 = {
+  data: MeDto
+  status: 200
+}
+
+export type updateMeResponseSuccess = (updateMeResponse200) & {
+  headers: Headers;
+};
+;
+
+export type updateMeResponse = (updateMeResponseSuccess)
+
+export const getUpdateMeUrl = () => {
+
+
+
+
+  return `/v1/me`
+}
+
+export const updateMe = async (updateMeDto: UpdateMeDto, options?: Parameters<typeof apiFetch>[1]): Promise<updateMeResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return apiFetch<updateMeResponse>(getUpdateMeUrl(),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(updateMeDto)
+  }
+);}
+
+
+
+
+
+export const getUpdateMeMutationKey = () => ['updateMe'] as const;
+
+export const getUpdateMeMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMe>>, TError,UpdateMeMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateMe>>, TError,UpdateMeMutationVariables, TContext> => {
+
+const mutationKey = getUpdateMeMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateMe>>, UpdateMeMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  updateMe(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateMeMutationResult = NonNullable<Awaited<ReturnType<typeof updateMe>>>
+    export type UpdateMeMutationBody = UpdateMeDto
+    export type UpdateMeMutationError = unknown
+    export type UpdateMeMutationVariables = {data: UpdateMeDto}
+
+    export const useUpdateMe = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMe>>, TError,UpdateMeMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof updateMe>>,
+        TError,
+        UpdateMeMutationVariables,
+        TContext
+      > => {
+      return useMutation(getUpdateMeMutationOptions(options), queryClient);
+    }
+    export type updateMySkillsResponse200 = {
+  data: MeDto
+  status: 200
+}
+
+export type updateMySkillsResponseSuccess = (updateMySkillsResponse200) & {
+  headers: Headers;
+};
+;
+
+export type updateMySkillsResponse = (updateMySkillsResponseSuccess)
+
+export const getUpdateMySkillsUrl = () => {
+
+
+
+
+  return `/v1/me/skills`
+}
+
+export const updateMySkills = async (updateSkillsDto: UpdateSkillsDto, options?: Parameters<typeof apiFetch>[1]): Promise<updateMySkillsResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return apiFetch<updateMySkillsResponse>(getUpdateMySkillsUrl(),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(updateSkillsDto)
+  }
+);}
+
+
+
+
+
+export const getUpdateMySkillsMutationKey = () => ['updateMySkills'] as const;
+
+export const getUpdateMySkillsMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMySkills>>, TError,UpdateMySkillsMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateMySkills>>, TError,UpdateMySkillsMutationVariables, TContext> => {
+
+const mutationKey = getUpdateMySkillsMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateMySkills>>, UpdateMySkillsMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  updateMySkills(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateMySkillsMutationResult = NonNullable<Awaited<ReturnType<typeof updateMySkills>>>
+    export type UpdateMySkillsMutationBody = UpdateSkillsDto
+    export type UpdateMySkillsMutationError = unknown
+    export type UpdateMySkillsMutationVariables = {data: UpdateSkillsDto}
+
+    export const useUpdateMySkills = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMySkills>>, TError,UpdateMySkillsMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof updateMySkills>>,
+        TError,
+        UpdateMySkillsMutationVariables,
+        TContext
+      > => {
+      return useMutation(getUpdateMySkillsMutationOptions(options), queryClient);
+    }
+    export type updateMyAvailabilityResponse200 = {
+  data: AvailabilitySlotDto[]
+  status: 200
+}
+
+export type updateMyAvailabilityResponseSuccess = (updateMyAvailabilityResponse200) & {
+  headers: Headers;
+};
+;
+
+export type updateMyAvailabilityResponse = (updateMyAvailabilityResponseSuccess)
+
+export const getUpdateMyAvailabilityUrl = () => {
+
+
+
+
+  return `/v1/me/availability`
+}
+
+export const updateMyAvailability = async (updateAvailabilityDto: UpdateAvailabilityDto, options?: Parameters<typeof apiFetch>[1]): Promise<updateMyAvailabilityResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return apiFetch<updateMyAvailabilityResponse>(getUpdateMyAvailabilityUrl(),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(updateAvailabilityDto)
+  }
+);}
+
+
+
+
+
+export const getUpdateMyAvailabilityMutationKey = () => ['updateMyAvailability'] as const;
+
+export const getUpdateMyAvailabilityMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMyAvailability>>, TError,UpdateMyAvailabilityMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateMyAvailability>>, TError,UpdateMyAvailabilityMutationVariables, TContext> => {
+
+const mutationKey = getUpdateMyAvailabilityMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateMyAvailability>>, UpdateMyAvailabilityMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  updateMyAvailability(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateMyAvailabilityMutationResult = NonNullable<Awaited<ReturnType<typeof updateMyAvailability>>>
+    export type UpdateMyAvailabilityMutationBody = UpdateAvailabilityDto
+    export type UpdateMyAvailabilityMutationError = unknown
+    export type UpdateMyAvailabilityMutationVariables = {data: UpdateAvailabilityDto}
+
+    export const useUpdateMyAvailability = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateMyAvailability>>, TError,UpdateMyAvailabilityMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof updateMyAvailability>>,
+        TError,
+        UpdateMyAvailabilityMutationVariables,
+        TContext
+      > => {
+      return useMutation(getUpdateMyAvailabilityMutationOptions(options), queryClient);
+    }
+    export type completeOnboardingResponse200 = {
+  data: MeDto
+  status: 200
+}
+
+export type completeOnboardingResponseSuccess = (completeOnboardingResponse200) & {
+  headers: Headers;
+};
+;
+
+export type completeOnboardingResponse = (completeOnboardingResponseSuccess)
+
+export const getCompleteOnboardingUrl = () => {
+
+
+
+
+  return `/v1/me/onboarding/complete`
+}
+
+export const completeOnboarding = async ( options?: Parameters<typeof apiFetch>[1]): Promise<completeOnboardingResponse> => {
+
+  return apiFetch<completeOnboardingResponse>(getCompleteOnboardingUrl(),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getCompleteOnboardingMutationKey = () => ['completeOnboarding'] as const;
+
+export const getCompleteOnboardingMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof completeOnboarding>>, TError,void, TContext>, request?: SecondParameter<typeof apiFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof completeOnboarding>>, TError,void, TContext> => {
+
+const mutationKey = getCompleteOnboardingMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof completeOnboarding>>, void> = () => {
+
+
+          return  completeOnboarding(requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CompleteOnboardingMutationResult = NonNullable<Awaited<ReturnType<typeof completeOnboarding>>>
+
+    export type CompleteOnboardingMutationError = unknown
+
+
+    export const useCompleteOnboarding = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof completeOnboarding>>, TError,void, TContext>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof completeOnboarding>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getCompleteOnboardingMutationOptions(options), queryClient);
+    }
