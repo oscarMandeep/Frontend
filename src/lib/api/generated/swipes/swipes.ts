@@ -4,219 +4,197 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import { useMutation } from "@tanstack/react-query";
+import {
+  useMutation
+} from '@tanstack/react-query';
 import type {
   MutationFunction,
   QueryClient,
   UseMutationOptions,
-  UseMutationResult,
-} from "@tanstack/react-query";
+  UseMutationResult
+} from '@tanstack/react-query';
 
-import type { SwipeDto, SwipeResponseDto } from "../model";
+import type {
+  SwipeDto,
+  SwipeResponseDto
+} from '../model';
 
-import { apiFetch } from "../../fetcher";
+import { apiFetch } from '../../fetcher';
+
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-export type createSwipeResponse200 = {
-  data: SwipeResponseDto;
-  status: 200;
-};
 
-export type createSwipeResponseSuccess = createSwipeResponse200 & {
+
+export type createSwipeResponse200 = {
+  data: SwipeResponseDto
+  status: 200
+}
+
+export type createSwipeResponseSuccess = (createSwipeResponse200) & {
   headers: Headers;
 };
-export type createSwipeResponse = createSwipeResponseSuccess;
+;
+
+export type createSwipeResponse = (createSwipeResponseSuccess)
 
 export const getCreateSwipeUrl = () => {
-  return `/v1/swipes`;
-};
 
-export const createSwipe = async (
-  swipeDto: SwipeDto,
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<createSwipeResponse> => {
-  const getHeaders = (
-    h?: NonNullable<RequestInit["headers"]>,
-  ): Record<string, string | readonly string[]> => {
+
+
+
+  return `/v1/swipes`
+}
+
+export const createSwipe = async (swipeDto: SwipeDto, options?: Parameters<typeof apiFetch>[1]): Promise<createSwipeResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Symbol.iterator in h) {
       return Object.fromEntries(
-        Array.from(
-          h as Iterable<Iterable<string>>,
-          (entry) => Array.from(entry) as [string, string],
-        ),
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<
-      string | readonly string[] | undefined
-    >(h)) {
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
       if (value !== undefined) headers[name] = value;
     }
     return headers;
   };
-  return apiFetch<createSwipeResponse>(getCreateSwipeUrl(), {
+return apiFetch<createSwipeResponse>(getCreateSwipeUrl(),
+  {
     ...options,
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...getHeaders(options?.headers),
-    },
-    body: JSON.stringify(swipeDto),
-  });
-};
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(swipeDto)
+  }
+);}
 
-export const getCreateSwipeMutationKey = () => ["createSwipe"] as const;
 
-export const getCreateSwipeMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createSwipe>>,
-    TError,
-    CreateSwipeMutationVariables,
-    TContext
-  >;
-  request?: SecondParameter<typeof apiFetch>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof createSwipe>>,
-  TError,
-  CreateSwipeMutationVariables,
-  TContext
-> => {
-  const mutationKey = getCreateSwipeMutationKey();
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof createSwipe>>,
-    CreateSwipeMutationVariables
-  > = (props) => {
-    const { data } = props ?? {};
 
-    return createSwipe(data, requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
+export const getCreateSwipeMutationKey = () => ['createSwipe'] as const;
 
-export type CreateSwipeMutationResult = NonNullable<
-  Awaited<ReturnType<typeof createSwipe>>
->;
-export type CreateSwipeMutationBody = SwipeDto;
-export type CreateSwipeMutationError = unknown;
-export type CreateSwipeMutationVariables = { data: SwipeDto };
+export const getCreateSwipeMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSwipe>>, TError,CreateSwipeMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createSwipe>>, TError,CreateSwipeMutationVariables, TContext> => {
 
-export const useCreateSwipe = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof createSwipe>>,
-      TError,
-      CreateSwipeMutationVariables,
-      TContext
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof createSwipe>>,
-  TError,
-  CreateSwipeMutationVariables,
-  TContext
-> => {
-  return useMutation(getCreateSwipeMutationOptions(options), queryClient);
-};
-export type undoLastSwipeResponse204 = {
-  data: void;
-  status: 204;
-};
+const mutationKey = getCreateSwipeMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
 
-export type undoLastSwipeResponseSuccess = undoLastSwipeResponse204 & {
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createSwipe>>, CreateSwipeMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  createSwipe(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateSwipeMutationResult = NonNullable<Awaited<ReturnType<typeof createSwipe>>>
+    export type CreateSwipeMutationBody = SwipeDto
+    export type CreateSwipeMutationError = unknown
+    export type CreateSwipeMutationVariables = {data: SwipeDto}
+
+    export const useCreateSwipe = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSwipe>>, TError,CreateSwipeMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createSwipe>>,
+        TError,
+        CreateSwipeMutationVariables,
+        TContext
+      > => {
+      return useMutation(getCreateSwipeMutationOptions(options), queryClient);
+    }
+    export type undoLastSwipeResponse204 = {
+  data: void
+  status: 204
+}
+
+export type undoLastSwipeResponseSuccess = (undoLastSwipeResponse204) & {
   headers: Headers;
 };
-export type undoLastSwipeResponse = undoLastSwipeResponseSuccess;
+;
+
+export type undoLastSwipeResponse = (undoLastSwipeResponseSuccess)
 
 export const getUndoLastSwipeUrl = () => {
-  return `/v1/swipes/last`;
-};
 
-export const undoLastSwipe = async (
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<undoLastSwipeResponse> => {
-  return apiFetch<undoLastSwipeResponse>(getUndoLastSwipeUrl(), {
+
+
+
+  return `/v1/swipes/last`
+}
+
+export const undoLastSwipe = async ( options?: Parameters<typeof apiFetch>[1]): Promise<undoLastSwipeResponse> => {
+
+  return apiFetch<undoLastSwipeResponse>(getUndoLastSwipeUrl(),
+  {
     ...options,
-    method: "DELETE",
-  });
-};
+    method: 'DELETE'
 
-export const getUndoLastSwipeMutationKey = () => ["undoLastSwipe"] as const;
 
-export const getUndoLastSwipeMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof undoLastSwipe>>,
-    TError,
-    void,
-    TContext
-  >;
-  request?: SecondParameter<typeof apiFetch>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof undoLastSwipe>>,
-  TError,
-  void,
-  TContext
-> => {
-  const mutationKey = getUndoLastSwipeMutationKey();
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
+  }
+);}
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof undoLastSwipe>>,
-    void
-  > = () => {
-    return undoLastSwipe(requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type UndoLastSwipeMutationResult = NonNullable<
-  Awaited<ReturnType<typeof undoLastSwipe>>
->;
 
-export type UndoLastSwipeMutationError = unknown;
 
-export const useUndoLastSwipe = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof undoLastSwipe>>,
-      TError,
-      void,
-      TContext
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof undoLastSwipe>>,
-  TError,
-  void,
-  TContext
-> => {
-  return useMutation(getUndoLastSwipeMutationOptions(options), queryClient);
-};
+export const getUndoLastSwipeMutationKey = () => ['undoLastSwipe'] as const;
+
+export const getUndoLastSwipeMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof undoLastSwipe>>, TError,void, TContext>, request?: SecondParameter<typeof apiFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof undoLastSwipe>>, TError,void, TContext> => {
+
+const mutationKey = getUndoLastSwipeMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof undoLastSwipe>>, void> = () => {
+
+
+          return  undoLastSwipe(requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UndoLastSwipeMutationResult = NonNullable<Awaited<ReturnType<typeof undoLastSwipe>>>
+
+    export type UndoLastSwipeMutationError = unknown
+
+
+    export const useUndoLastSwipe = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof undoLastSwipe>>, TError,void, TContext>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof undoLastSwipe>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getUndoLastSwipeMutationOptions(options), queryClient);
+    }

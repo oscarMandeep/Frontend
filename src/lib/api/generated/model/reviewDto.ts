@@ -9,9 +9,9 @@ export interface ReviewDto {
   id: string;
   sessionId: string;
   /**
-   * @minimum 1
-   * @maximum 5
-   */
+     * @minimum 1
+     * @maximum 5
+     */
   rating: number;
   /** @nullable */
   comment: string | null;

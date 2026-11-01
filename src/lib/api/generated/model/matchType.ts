@@ -5,10 +5,11 @@
  * OpenAPI spec version: 1
  */
 
-export type MatchType = (typeof MatchType)[keyof typeof MatchType];
+export type MatchType = typeof MatchType[keyof typeof MatchType];
+
 
 export const MatchType = {
-  SWAP: "SWAP",
-  CREDIT: "CREDIT",
-  CHAIN: "CHAIN",
+  SWAP: 'SWAP',
+  CREDIT: 'CREDIT',
+  CHAIN: 'CHAIN',
 } as const;

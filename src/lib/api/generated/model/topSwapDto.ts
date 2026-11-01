@@ -4,7 +4,7 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { SkillRefDto } from "./skillRefDto";
+import type { SkillRefDto } from './skillRefDto';
 
 export interface TopSwapDto {
   from: SkillRefDto;

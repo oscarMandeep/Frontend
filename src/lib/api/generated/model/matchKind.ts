@@ -5,9 +5,10 @@
  * OpenAPI spec version: 1
  */
 
-export type MatchKind = (typeof MatchKind)[keyof typeof MatchKind];
+export type MatchKind = typeof MatchKind[keyof typeof MatchKind];
+
 
 export const MatchKind = {
-  SWAP: "SWAP",
-  CREDIT: "CREDIT",
+  SWAP: 'SWAP',
+  CREDIT: 'CREDIT',
 } as const;

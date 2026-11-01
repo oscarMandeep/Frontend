@@ -4,7 +4,7 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { CreditTxDto } from "./creditTxDto";
+import type { CreditTxDto } from './creditTxDto';
 
 export interface PaginatedCreditTxDto {
   items: CreditTxDto[];

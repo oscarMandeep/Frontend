@@ -4,7 +4,9 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import { useQuery } from "@tanstack/react-query";
+import {
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -14,24 +16,27 @@ import type {
   QueryKey,
   UndefinedInitialDataOptions,
   UseQueryOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+  UseQueryResult
+} from '@tanstack/react-query';
 
-import type { DeckCardDto, GetDiscoverParams } from "../model";
+import type {
+  DeckCardDto,
+  GetDiscoverParams
+} from '../model';
 
-import { apiFetch } from "../../fetcher";
+import { apiFetch } from '../../fetcher';
+
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-const withQueryKey = <T extends object, K>(
-  query: T,
-  queryKey: K,
-): T & { queryKey: K } => {
+
+
+const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKey: K } => {
   const result = { queryKey } as T & { queryKey: K };
   for (const key of Object.keys(query)) {
     // The explicit queryKey always wins, matching the previous
     // `{ ...query, queryKey }` spread where it was set last.
-    if (key === "queryKey") continue;
+    if (key === 'queryKey') continue;
     Object.defineProperty(result, key, {
       enumerable: true,
       configurable: true,
@@ -42,160 +47,115 @@ const withQueryKey = <T extends object, K>(
 };
 
 export type getDiscoverResponse200 = {
-  data: DeckCardDto[];
-  status: 200;
-};
+  data: DeckCardDto[]
+  status: 200
+}
 
-export type getDiscoverResponseSuccess = getDiscoverResponse200 & {
+export type getDiscoverResponseSuccess = (getDiscoverResponse200) & {
   headers: Headers;
 };
-export type getDiscoverResponse = getDiscoverResponseSuccess;
+;
 
-export const getGetDiscoverUrl = (params?: GetDiscoverParams) => {
+export type getDiscoverResponse = (getDiscoverResponseSuccess)
+
+export const getGetDiscoverUrl = (params?: GetDiscoverParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
+      normalizedParams.append(key, value === null ? 'null' : String(value))
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/v1/discover?${stringifiedParams}`
-    : `/v1/discover`;
-};
+  return stringifiedParams.length > 0 ? `/v1/discover?${stringifiedParams}` : `/v1/discover`
+}
 
-export const getDiscover = async (
-  params?: GetDiscoverParams,
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<getDiscoverResponse> => {
-  return apiFetch<getDiscoverResponse>(getGetDiscoverUrl(params), {
+export const getDiscover = async (params?: GetDiscoverParams, options?: Parameters<typeof apiFetch>[1]): Promise<getDiscoverResponse> => {
+
+  return apiFetch<getDiscoverResponse>(getGetDiscoverUrl(params),
+  {
     ...options,
-    method: "GET",
-  });
-};
+    method: 'GET'
 
-export const getGetDiscoverQueryKey = (params?: GetDiscoverParams) => {
-  return [`/v1/discover`, ...(params ? [params] : [])] as const;
-};
 
-export const getGetDiscoverQueryOptions = <
-  TData = Awaited<ReturnType<typeof getDiscover>>,
-  TError = unknown,
->(
-  params?: GetDiscoverParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getDiscover>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
+  }
+);}
+
+
+
+
+
+export const getGetDiscoverQueryKey = (params?: GetDiscoverParams,) => {
+    return [
+    `/v1/discover`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetDiscoverQueryOptions = <TData = Awaited<ReturnType<typeof getDiscover>>, TError = unknown>(params?: GetDiscoverParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDiscover>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetDiscoverQueryKey(params);
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getDiscover>>> = ({
-    signal,
-  }) => getDiscover(params, { signal, ...requestOptions });
+  const queryKey =  queryOptions?.queryKey ?? getGetDiscoverQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getDiscover>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
 
-export type GetDiscoverQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getDiscover>>
->;
-export type GetDiscoverQueryError = unknown;
 
-export function useGetDiscover<
-  TData = Awaited<ReturnType<typeof getDiscover>>,
-  TError = unknown,
->(
-  params: undefined | GetDiscoverParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getDiscover>>, TError, TData>
-    > &
-      Pick<
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDiscover>>> = ({ signal }) => getDiscover(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDiscover>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetDiscoverQueryResult = NonNullable<Awaited<ReturnType<typeof getDiscover>>>
+export type GetDiscoverQueryError = unknown
+
+
+export function useGetDiscover<TData = Awaited<ReturnType<typeof getDiscover>>, TError = unknown>(
+ params: undefined |  GetDiscoverParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDiscover>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getDiscover>>,
           TError,
           Awaited<ReturnType<typeof getDiscover>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useGetDiscover<
-  TData = Awaited<ReturnType<typeof getDiscover>>,
-  TError = unknown,
->(
-  params?: GetDiscoverParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getDiscover>>, TError, TData>
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetDiscover<TData = Awaited<ReturnType<typeof getDiscover>>, TError = unknown>(
+ params?: GetDiscoverParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDiscover>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getDiscover>>,
           TError,
           Awaited<ReturnType<typeof getDiscover>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useGetDiscover<
-  TData = Awaited<ReturnType<typeof getDiscover>>,
-  TError = unknown,
->(
-  params?: GetDiscoverParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getDiscover>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetDiscover<TData = Awaited<ReturnType<typeof getDiscover>>, TError = unknown>(
+ params?: GetDiscoverParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDiscover>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetDiscover<
-  TData = Awaited<ReturnType<typeof getDiscover>>,
-  TError = unknown,
->(
-  params?: GetDiscoverParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getDiscover>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getGetDiscoverQueryOptions(params, options);
+export function useGetDiscover<TData = Awaited<ReturnType<typeof getDiscover>>, TError = unknown>(
+ params?: GetDiscoverParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDiscover>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getGetDiscoverQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
+
+
+
+
+
+

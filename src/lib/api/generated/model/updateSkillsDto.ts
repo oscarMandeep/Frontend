@@ -4,8 +4,8 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { HaveInputDto } from "./haveInputDto";
-import type { WantInputDto } from "./wantInputDto";
+import type { HaveInputDto } from './haveInputDto';
+import type { WantInputDto } from './wantInputDto';
 
 export interface UpdateSkillsDto {
   haves: HaveInputDto[];

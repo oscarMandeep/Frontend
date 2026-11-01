@@ -4,7 +4,7 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { Mode } from "./mode";
+import type { Mode } from './mode';
 
 export type GetDiscoverParams = {
   /** ONLINE or IN_PERSON keeps people who can do that; BOTH or omitted keeps everyone */

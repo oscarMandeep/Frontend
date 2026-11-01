@@ -5,10 +5,10 @@
  * OpenAPI spec version: 1
  */
 
-export type CreateSessionDtoMode =
-  (typeof CreateSessionDtoMode)[keyof typeof CreateSessionDtoMode];
+export type CreateSessionDtoMode = typeof CreateSessionDtoMode[keyof typeof CreateSessionDtoMode];
+
 
 export const CreateSessionDtoMode = {
-  ONLINE: "ONLINE",
-  IN_PERSON: "IN_PERSON",
+  ONLINE: 'ONLINE',
+  IN_PERSON: 'IN_PERSON',
 } as const;

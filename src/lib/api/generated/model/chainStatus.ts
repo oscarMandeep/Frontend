@@ -5,11 +5,12 @@
  * OpenAPI spec version: 1
  */
 
-export type ChainStatus = (typeof ChainStatus)[keyof typeof ChainStatus];
+export type ChainStatus = typeof ChainStatus[keyof typeof ChainStatus];
+
 
 export const ChainStatus = {
-  PROPOSED: "PROPOSED",
-  ACCEPTED: "ACCEPTED",
-  REJECTED: "REJECTED",
-  EXPIRED: "EXPIRED",
+  PROPOSED: 'PROPOSED',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  EXPIRED: 'EXPIRED',
 } as const;

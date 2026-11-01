@@ -4,7 +4,10 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -17,8 +20,8 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+  UseQueryResult
+} from '@tanstack/react-query';
 
 import type {
   CancelSessionDto,
@@ -26,22 +29,22 @@ import type {
   GetMatchSlotsParams,
   ListSessionsParams,
   SessionDto,
-  SlotDto,
-} from "../model";
+  SlotDto
+} from '../model';
 
-import { apiFetch } from "../../fetcher";
+import { apiFetch } from '../../fetcher';
+
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-const withQueryKey = <T extends object, K>(
-  query: T,
-  queryKey: K,
-): T & { queryKey: K } => {
+
+
+const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKey: K } => {
   const result = { queryKey } as T & { queryKey: K };
   for (const key of Object.keys(query)) {
     // The explicit queryKey always wins, matching the previous
     // `{ ...query, queryKey }` spread where it was set last.
-    if (key === "queryKey") continue;
+    if (key === 'queryKey') continue;
     Object.defineProperty(result, key, {
       enumerable: true,
       configurable: true,
@@ -52,843 +55,660 @@ const withQueryKey = <T extends object, K>(
 };
 
 export type listSessionsResponse200 = {
-  data: SessionDto[];
-  status: 200;
-};
+  data: SessionDto[]
+  status: 200
+}
 
-export type listSessionsResponseSuccess = listSessionsResponse200 & {
+export type listSessionsResponseSuccess = (listSessionsResponse200) & {
   headers: Headers;
 };
-export type listSessionsResponse = listSessionsResponseSuccess;
+;
 
-export const getListSessionsUrl = (params?: ListSessionsParams) => {
+export type listSessionsResponse = (listSessionsResponseSuccess)
+
+export const getListSessionsUrl = (params?: ListSessionsParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
+      normalizedParams.append(key, value === null ? 'null' : String(value))
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/v1/sessions?${stringifiedParams}`
-    : `/v1/sessions`;
-};
+  return stringifiedParams.length > 0 ? `/v1/sessions?${stringifiedParams}` : `/v1/sessions`
+}
 
-export const listSessions = async (
-  params?: ListSessionsParams,
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<listSessionsResponse> => {
-  return apiFetch<listSessionsResponse>(getListSessionsUrl(params), {
+export const listSessions = async (params?: ListSessionsParams, options?: Parameters<typeof apiFetch>[1]): Promise<listSessionsResponse> => {
+
+  return apiFetch<listSessionsResponse>(getListSessionsUrl(params),
+  {
     ...options,
-    method: "GET",
-  });
-};
+    method: 'GET'
 
-export const getListSessionsQueryKey = (params?: ListSessionsParams) => {
-  return [`/v1/sessions`, ...(params ? [params] : [])] as const;
-};
 
-export const getListSessionsQueryOptions = <
-  TData = Awaited<ReturnType<typeof listSessions>>,
-  TError = unknown,
->(
-  params?: ListSessionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof listSessions>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
+  }
+);}
+
+
+
+
+
+export const getListSessionsQueryKey = (params?: ListSessionsParams,) => {
+    return [
+    `/v1/sessions`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListSessionsQueryOptions = <TData = Awaited<ReturnType<typeof listSessions>>, TError = unknown>(params?: ListSessionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listSessions>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getListSessionsQueryKey(params);
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof listSessions>>> = ({
-    signal,
-  }) => listSessions(params, { signal, ...requestOptions });
+  const queryKey =  queryOptions?.queryKey ?? getListSessionsQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof listSessions>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
 
-export type ListSessionsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof listSessions>>
->;
-export type ListSessionsQueryError = unknown;
 
-export function useListSessions<
-  TData = Awaited<ReturnType<typeof listSessions>>,
-  TError = unknown,
->(
-  params: undefined | ListSessionsParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof listSessions>>, TError, TData>
-    > &
-      Pick<
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listSessions>>> = ({ signal }) => listSessions(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listSessions>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ListSessionsQueryResult = NonNullable<Awaited<ReturnType<typeof listSessions>>>
+export type ListSessionsQueryError = unknown
+
+
+export function useListSessions<TData = Awaited<ReturnType<typeof listSessions>>, TError = unknown>(
+ params: undefined |  ListSessionsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listSessions>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof listSessions>>,
           TError,
           Awaited<ReturnType<typeof listSessions>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useListSessions<
-  TData = Awaited<ReturnType<typeof listSessions>>,
-  TError = unknown,
->(
-  params?: ListSessionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof listSessions>>, TError, TData>
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListSessions<TData = Awaited<ReturnType<typeof listSessions>>, TError = unknown>(
+ params?: ListSessionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listSessions>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof listSessions>>,
           TError,
           Awaited<ReturnType<typeof listSessions>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useListSessions<
-  TData = Awaited<ReturnType<typeof listSessions>>,
-  TError = unknown,
->(
-  params?: ListSessionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof listSessions>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListSessions<TData = Awaited<ReturnType<typeof listSessions>>, TError = unknown>(
+ params?: ListSessionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listSessions>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useListSessions<
-  TData = Awaited<ReturnType<typeof listSessions>>,
-  TError = unknown,
->(
-  params?: ListSessionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof listSessions>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getListSessionsQueryOptions(params, options);
+export function useListSessions<TData = Awaited<ReturnType<typeof listSessions>>, TError = unknown>(
+ params?: ListSessionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listSessions>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getListSessionsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
+
+
+
+
+
 
 export type createSessionResponse201 = {
-  data: SessionDto;
-  status: 201;
-};
+  data: SessionDto
+  status: 201
+}
 
-export type createSessionResponseSuccess = createSessionResponse201 & {
+export type createSessionResponseSuccess = (createSessionResponse201) & {
   headers: Headers;
 };
-export type createSessionResponse = createSessionResponseSuccess;
+;
+
+export type createSessionResponse = (createSessionResponseSuccess)
 
 export const getCreateSessionUrl = () => {
-  return `/v1/sessions`;
-};
 
-export const createSession = async (
-  createSessionDto: CreateSessionDto,
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<createSessionResponse> => {
-  const getHeaders = (
-    h?: NonNullable<RequestInit["headers"]>,
-  ): Record<string, string | readonly string[]> => {
+
+
+
+  return `/v1/sessions`
+}
+
+export const createSession = async (createSessionDto: CreateSessionDto, options?: Parameters<typeof apiFetch>[1]): Promise<createSessionResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Symbol.iterator in h) {
       return Object.fromEntries(
-        Array.from(
-          h as Iterable<Iterable<string>>,
-          (entry) => Array.from(entry) as [string, string],
-        ),
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<
-      string | readonly string[] | undefined
-    >(h)) {
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
       if (value !== undefined) headers[name] = value;
     }
     return headers;
   };
-  return apiFetch<createSessionResponse>(getCreateSessionUrl(), {
+return apiFetch<createSessionResponse>(getCreateSessionUrl(),
+  {
     ...options,
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...getHeaders(options?.headers),
-    },
-    body: JSON.stringify(createSessionDto),
-  });
-};
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(createSessionDto)
+  }
+);}
 
-export const getCreateSessionMutationKey = () => ["createSession"] as const;
 
-export const getCreateSessionMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createSession>>,
-    TError,
-    CreateSessionMutationVariables,
-    TContext
-  >;
-  request?: SecondParameter<typeof apiFetch>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof createSession>>,
-  TError,
-  CreateSessionMutationVariables,
-  TContext
-> => {
-  const mutationKey = getCreateSessionMutationKey();
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof createSession>>,
-    CreateSessionMutationVariables
-  > = (props) => {
-    const { data } = props ?? {};
 
-    return createSession(data, requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
+export const getCreateSessionMutationKey = () => ['createSession'] as const;
 
-export type CreateSessionMutationResult = NonNullable<
-  Awaited<ReturnType<typeof createSession>>
->;
-export type CreateSessionMutationBody = CreateSessionDto;
-export type CreateSessionMutationError = unknown;
-export type CreateSessionMutationVariables = { data: CreateSessionDto };
+export const getCreateSessionMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSession>>, TError,CreateSessionMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createSession>>, TError,CreateSessionMutationVariables, TContext> => {
 
-export const useCreateSession = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof createSession>>,
-      TError,
-      CreateSessionMutationVariables,
-      TContext
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof createSession>>,
-  TError,
-  CreateSessionMutationVariables,
-  TContext
-> => {
-  return useMutation(getCreateSessionMutationOptions(options), queryClient);
-};
-export type confirmSessionResponse200 = {
-  data: SessionDto;
-  status: 200;
-};
+const mutationKey = getCreateSessionMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
 
-export type confirmSessionResponseSuccess = confirmSessionResponse200 & {
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createSession>>, CreateSessionMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  createSession(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateSessionMutationResult = NonNullable<Awaited<ReturnType<typeof createSession>>>
+    export type CreateSessionMutationBody = CreateSessionDto
+    export type CreateSessionMutationError = unknown
+    export type CreateSessionMutationVariables = {data: CreateSessionDto}
+
+    export const useCreateSession = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSession>>, TError,CreateSessionMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createSession>>,
+        TError,
+        CreateSessionMutationVariables,
+        TContext
+      > => {
+      return useMutation(getCreateSessionMutationOptions(options), queryClient);
+    }
+    export type confirmSessionResponse200 = {
+  data: SessionDto
+  status: 200
+}
+
+export type confirmSessionResponseSuccess = (confirmSessionResponse200) & {
   headers: Headers;
 };
-export type confirmSessionResponse = confirmSessionResponseSuccess;
+;
 
-export const getConfirmSessionUrl = (id: string) => {
-  return `/v1/sessions/${id}/confirm`;
-};
+export type confirmSessionResponse = (confirmSessionResponseSuccess)
 
-export const confirmSession = async (
-  id: string,
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<confirmSessionResponse> => {
-  return apiFetch<confirmSessionResponse>(getConfirmSessionUrl(id), {
+export const getConfirmSessionUrl = (id: string,) => {
+
+
+
+
+  return `/v1/sessions/${id}/confirm`
+}
+
+export const confirmSession = async (id: string, options?: Parameters<typeof apiFetch>[1]): Promise<confirmSessionResponse> => {
+
+  return apiFetch<confirmSessionResponse>(getConfirmSessionUrl(id),
+  {
     ...options,
-    method: "POST",
-  });
-};
+    method: 'POST'
 
-export const getConfirmSessionMutationKey = () => ["confirmSession"] as const;
 
-export const getConfirmSessionMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof confirmSession>>,
-    TError,
-    ConfirmSessionMutationVariables,
-    TContext
-  >;
-  request?: SecondParameter<typeof apiFetch>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof confirmSession>>,
-  TError,
-  ConfirmSessionMutationVariables,
-  TContext
-> => {
-  const mutationKey = getConfirmSessionMutationKey();
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
+  }
+);}
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof confirmSession>>,
-    ConfirmSessionMutationVariables
-  > = (props) => {
-    const { id } = props ?? {};
 
-    return confirmSession(id, requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type ConfirmSessionMutationResult = NonNullable<
-  Awaited<ReturnType<typeof confirmSession>>
->;
 
-export type ConfirmSessionMutationError = unknown;
-export type ConfirmSessionMutationVariables = { id: string };
+export const getConfirmSessionMutationKey = () => ['confirmSession'] as const;
 
-export const useConfirmSession = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof confirmSession>>,
-      TError,
-      ConfirmSessionMutationVariables,
-      TContext
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof confirmSession>>,
-  TError,
-  ConfirmSessionMutationVariables,
-  TContext
-> => {
-  return useMutation(getConfirmSessionMutationOptions(options), queryClient);
-};
-export type cancelSessionResponse200 = {
-  data: SessionDto;
-  status: 200;
-};
+export const getConfirmSessionMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof confirmSession>>, TError,ConfirmSessionMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof confirmSession>>, TError,ConfirmSessionMutationVariables, TContext> => {
 
-export type cancelSessionResponseSuccess = cancelSessionResponse200 & {
+const mutationKey = getConfirmSessionMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof confirmSession>>, ConfirmSessionMutationVariables> = (props) => {
+          const {id} = props ?? {};
+
+          return  confirmSession(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ConfirmSessionMutationResult = NonNullable<Awaited<ReturnType<typeof confirmSession>>>
+
+    export type ConfirmSessionMutationError = unknown
+    export type ConfirmSessionMutationVariables = {id: string}
+
+    export const useConfirmSession = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof confirmSession>>, TError,ConfirmSessionMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof confirmSession>>,
+        TError,
+        ConfirmSessionMutationVariables,
+        TContext
+      > => {
+      return useMutation(getConfirmSessionMutationOptions(options), queryClient);
+    }
+    export type cancelSessionResponse200 = {
+  data: SessionDto
+  status: 200
+}
+
+export type cancelSessionResponseSuccess = (cancelSessionResponse200) & {
   headers: Headers;
 };
-export type cancelSessionResponse = cancelSessionResponseSuccess;
+;
 
-export const getCancelSessionUrl = (id: string) => {
-  return `/v1/sessions/${id}/cancel`;
-};
+export type cancelSessionResponse = (cancelSessionResponseSuccess)
 
-export const cancelSession = async (
-  id: string,
-  cancelSessionDto: CancelSessionDto,
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<cancelSessionResponse> => {
-  const getHeaders = (
-    h?: NonNullable<RequestInit["headers"]>,
-  ): Record<string, string | readonly string[]> => {
+export const getCancelSessionUrl = (id: string,) => {
+
+
+
+
+  return `/v1/sessions/${id}/cancel`
+}
+
+export const cancelSession = async (id: string,
+    cancelSessionDto: CancelSessionDto, options?: Parameters<typeof apiFetch>[1]): Promise<cancelSessionResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Symbol.iterator in h) {
       return Object.fromEntries(
-        Array.from(
-          h as Iterable<Iterable<string>>,
-          (entry) => Array.from(entry) as [string, string],
-        ),
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<
-      string | readonly string[] | undefined
-    >(h)) {
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
       if (value !== undefined) headers[name] = value;
     }
     return headers;
   };
-  return apiFetch<cancelSessionResponse>(getCancelSessionUrl(id), {
+return apiFetch<cancelSessionResponse>(getCancelSessionUrl(id),
+  {
     ...options,
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...getHeaders(options?.headers),
-    },
-    body: JSON.stringify(cancelSessionDto),
-  });
-};
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(cancelSessionDto)
+  }
+);}
 
-export const getCancelSessionMutationKey = () => ["cancelSession"] as const;
 
-export const getCancelSessionMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof cancelSession>>,
-    TError,
-    CancelSessionMutationVariables,
-    TContext
-  >;
-  request?: SecondParameter<typeof apiFetch>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof cancelSession>>,
-  TError,
-  CancelSessionMutationVariables,
-  TContext
-> => {
-  const mutationKey = getCancelSessionMutationKey();
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof cancelSession>>,
-    CancelSessionMutationVariables
-  > = (props) => {
-    const { id, data } = props ?? {};
 
-    return cancelSession(id, data, requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
+export const getCancelSessionMutationKey = () => ['cancelSession'] as const;
 
-export type CancelSessionMutationResult = NonNullable<
-  Awaited<ReturnType<typeof cancelSession>>
->;
-export type CancelSessionMutationBody = CancelSessionDto;
-export type CancelSessionMutationError = unknown;
-export type CancelSessionMutationVariables = {
-  id: string;
-  data: CancelSessionDto;
-};
+export const getCancelSessionMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cancelSession>>, TError,CancelSessionMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof cancelSession>>, TError,CancelSessionMutationVariables, TContext> => {
 
-export const useCancelSession = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof cancelSession>>,
-      TError,
-      CancelSessionMutationVariables,
-      TContext
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof cancelSession>>,
-  TError,
-  CancelSessionMutationVariables,
-  TContext
-> => {
-  return useMutation(getCancelSessionMutationOptions(options), queryClient);
-};
-export type completeSessionResponse200 = {
-  data: SessionDto;
-  status: 200;
-};
+const mutationKey = getCancelSessionMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
 
-export type completeSessionResponseSuccess = completeSessionResponse200 & {
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof cancelSession>>, CancelSessionMutationVariables> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  cancelSession(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CancelSessionMutationResult = NonNullable<Awaited<ReturnType<typeof cancelSession>>>
+    export type CancelSessionMutationBody = CancelSessionDto
+    export type CancelSessionMutationError = unknown
+    export type CancelSessionMutationVariables = {id: string;data: CancelSessionDto}
+
+    export const useCancelSession = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cancelSession>>, TError,CancelSessionMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof cancelSession>>,
+        TError,
+        CancelSessionMutationVariables,
+        TContext
+      > => {
+      return useMutation(getCancelSessionMutationOptions(options), queryClient);
+    }
+    export type completeSessionResponse200 = {
+  data: SessionDto
+  status: 200
+}
+
+export type completeSessionResponseSuccess = (completeSessionResponse200) & {
   headers: Headers;
 };
-export type completeSessionResponse = completeSessionResponseSuccess;
+;
 
-export const getCompleteSessionUrl = (id: string) => {
-  return `/v1/sessions/${id}/complete`;
-};
+export type completeSessionResponse = (completeSessionResponseSuccess)
 
-export const completeSession = async (
-  id: string,
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<completeSessionResponse> => {
-  return apiFetch<completeSessionResponse>(getCompleteSessionUrl(id), {
+export const getCompleteSessionUrl = (id: string,) => {
+
+
+
+
+  return `/v1/sessions/${id}/complete`
+}
+
+export const completeSession = async (id: string, options?: Parameters<typeof apiFetch>[1]): Promise<completeSessionResponse> => {
+
+  return apiFetch<completeSessionResponse>(getCompleteSessionUrl(id),
+  {
     ...options,
-    method: "POST",
-  });
-};
+    method: 'POST'
 
-export const getCompleteSessionMutationKey = () => ["completeSession"] as const;
 
-export const getCompleteSessionMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof completeSession>>,
-    TError,
-    CompleteSessionMutationVariables,
-    TContext
-  >;
-  request?: SecondParameter<typeof apiFetch>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof completeSession>>,
-  TError,
-  CompleteSessionMutationVariables,
-  TContext
-> => {
-  const mutationKey = getCompleteSessionMutationKey();
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
+  }
+);}
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof completeSession>>,
-    CompleteSessionMutationVariables
-  > = (props) => {
-    const { id } = props ?? {};
 
-    return completeSession(id, requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type CompleteSessionMutationResult = NonNullable<
-  Awaited<ReturnType<typeof completeSession>>
->;
 
-export type CompleteSessionMutationError = unknown;
-export type CompleteSessionMutationVariables = { id: string };
+export const getCompleteSessionMutationKey = () => ['completeSession'] as const;
 
-export const useCompleteSession = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof completeSession>>,
-      TError,
-      CompleteSessionMutationVariables,
-      TContext
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof completeSession>>,
-  TError,
-  CompleteSessionMutationVariables,
-  TContext
-> => {
-  return useMutation(getCompleteSessionMutationOptions(options), queryClient);
-};
-export type reportNoShowResponse200 = {
-  data: SessionDto;
-  status: 200;
-};
+export const getCompleteSessionMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof completeSession>>, TError,CompleteSessionMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof completeSession>>, TError,CompleteSessionMutationVariables, TContext> => {
 
-export type reportNoShowResponseSuccess = reportNoShowResponse200 & {
+const mutationKey = getCompleteSessionMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof completeSession>>, CompleteSessionMutationVariables> = (props) => {
+          const {id} = props ?? {};
+
+          return  completeSession(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CompleteSessionMutationResult = NonNullable<Awaited<ReturnType<typeof completeSession>>>
+
+    export type CompleteSessionMutationError = unknown
+    export type CompleteSessionMutationVariables = {id: string}
+
+    export const useCompleteSession = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof completeSession>>, TError,CompleteSessionMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof completeSession>>,
+        TError,
+        CompleteSessionMutationVariables,
+        TContext
+      > => {
+      return useMutation(getCompleteSessionMutationOptions(options), queryClient);
+    }
+    export type reportNoShowResponse200 = {
+  data: SessionDto
+  status: 200
+}
+
+export type reportNoShowResponseSuccess = (reportNoShowResponse200) & {
   headers: Headers;
 };
-export type reportNoShowResponse = reportNoShowResponseSuccess;
+;
 
-export const getReportNoShowUrl = (id: string) => {
-  return `/v1/sessions/${id}/no-show`;
-};
+export type reportNoShowResponse = (reportNoShowResponseSuccess)
 
-export const reportNoShow = async (
-  id: string,
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<reportNoShowResponse> => {
-  return apiFetch<reportNoShowResponse>(getReportNoShowUrl(id), {
+export const getReportNoShowUrl = (id: string,) => {
+
+
+
+
+  return `/v1/sessions/${id}/no-show`
+}
+
+export const reportNoShow = async (id: string, options?: Parameters<typeof apiFetch>[1]): Promise<reportNoShowResponse> => {
+
+  return apiFetch<reportNoShowResponse>(getReportNoShowUrl(id),
+  {
     ...options,
-    method: "POST",
-  });
-};
+    method: 'POST'
 
-export const getReportNoShowMutationKey = () => ["reportNoShow"] as const;
 
-export const getReportNoShowMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof reportNoShow>>,
-    TError,
-    ReportNoShowMutationVariables,
-    TContext
-  >;
-  request?: SecondParameter<typeof apiFetch>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof reportNoShow>>,
-  TError,
-  ReportNoShowMutationVariables,
-  TContext
-> => {
-  const mutationKey = getReportNoShowMutationKey();
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
+  }
+);}
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof reportNoShow>>,
-    ReportNoShowMutationVariables
-  > = (props) => {
-    const { id } = props ?? {};
 
-    return reportNoShow(id, requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type ReportNoShowMutationResult = NonNullable<
-  Awaited<ReturnType<typeof reportNoShow>>
->;
 
-export type ReportNoShowMutationError = unknown;
-export type ReportNoShowMutationVariables = { id: string };
+export const getReportNoShowMutationKey = () => ['reportNoShow'] as const;
 
-export const useReportNoShow = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof reportNoShow>>,
-      TError,
-      ReportNoShowMutationVariables,
-      TContext
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof reportNoShow>>,
-  TError,
-  ReportNoShowMutationVariables,
-  TContext
-> => {
-  return useMutation(getReportNoShowMutationOptions(options), queryClient);
-};
-export type getMatchSlotsResponse200 = {
-  data: SlotDto[];
-  status: 200;
-};
+export const getReportNoShowMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reportNoShow>>, TError,ReportNoShowMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof reportNoShow>>, TError,ReportNoShowMutationVariables, TContext> => {
 
-export type getMatchSlotsResponseSuccess = getMatchSlotsResponse200 & {
+const mutationKey = getReportNoShowMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reportNoShow>>, ReportNoShowMutationVariables> = (props) => {
+          const {id} = props ?? {};
+
+          return  reportNoShow(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReportNoShowMutationResult = NonNullable<Awaited<ReturnType<typeof reportNoShow>>>
+
+    export type ReportNoShowMutationError = unknown
+    export type ReportNoShowMutationVariables = {id: string}
+
+    export const useReportNoShow = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reportNoShow>>, TError,ReportNoShowMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof reportNoShow>>,
+        TError,
+        ReportNoShowMutationVariables,
+        TContext
+      > => {
+      return useMutation(getReportNoShowMutationOptions(options), queryClient);
+    }
+    export type getMatchSlotsResponse200 = {
+  data: SlotDto[]
+  status: 200
+}
+
+export type getMatchSlotsResponseSuccess = (getMatchSlotsResponse200) & {
   headers: Headers;
 };
-export type getMatchSlotsResponse = getMatchSlotsResponseSuccess;
+;
 
-export const getGetMatchSlotsUrl = (
-  id: string,
-  params?: GetMatchSlotsParams,
-) => {
+export type getMatchSlotsResponse = (getMatchSlotsResponseSuccess)
+
+export const getGetMatchSlotsUrl = (id: string,
+    params?: GetMatchSlotsParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
+      normalizedParams.append(key, value === null ? 'null' : String(value))
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/v1/matches/${id}/slots?${stringifiedParams}`
-    : `/v1/matches/${id}/slots`;
-};
+  return stringifiedParams.length > 0 ? `/v1/matches/${id}/slots?${stringifiedParams}` : `/v1/matches/${id}/slots`
+}
 
-export const getMatchSlots = async (
-  id: string,
-  params?: GetMatchSlotsParams,
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<getMatchSlotsResponse> => {
-  return apiFetch<getMatchSlotsResponse>(getGetMatchSlotsUrl(id, params), {
+export const getMatchSlots = async (id: string,
+    params?: GetMatchSlotsParams, options?: Parameters<typeof apiFetch>[1]): Promise<getMatchSlotsResponse> => {
+
+  return apiFetch<getMatchSlotsResponse>(getGetMatchSlotsUrl(id,params),
+  {
     ...options,
-    method: "GET",
-  });
-};
+    method: 'GET'
 
-export const getGetMatchSlotsQueryKey = (
-  id: string,
-  params?: GetMatchSlotsParams,
+
+  }
+);}
+
+
+
+
+
+export const getGetMatchSlotsQueryKey = (id: string,
+    params?: GetMatchSlotsParams,) => {
+    return [
+    `/v1/matches/${id}/slots`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetMatchSlotsQueryOptions = <TData = Awaited<ReturnType<typeof getMatchSlots>>, TError = unknown>(id: string,
+    params?: GetMatchSlotsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMatchSlots>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
 ) => {
-  return [`/v1/matches/${id}/slots`, ...(params ? [params] : [])] as const;
-};
 
-export const getGetMatchSlotsQueryOptions = <
-  TData = Awaited<ReturnType<typeof getMatchSlots>>,
-  TError = unknown,
->(
-  id: string,
-  params?: GetMatchSlotsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getMatchSlots>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =
-    queryOptions?.queryKey ?? getGetMatchSlotsQueryKey(id, params);
+  const queryKey =  queryOptions?.queryKey ?? getGetMatchSlotsQueryKey(id,params);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMatchSlots>>> = ({
-    signal,
-  }) => getMatchSlots(id, params, { signal, ...requestOptions });
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: id !== null && id !== undefined,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof getMatchSlots>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
 
-export type GetMatchSlotsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getMatchSlots>>
->;
-export type GetMatchSlotsQueryError = unknown;
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMatchSlots>>> = ({ signal }) => getMatchSlots(id,params, { signal, ...requestOptions });
 
-export function useGetMatchSlots<
-  TData = Awaited<ReturnType<typeof getMatchSlots>>,
-  TError = unknown,
->(
-  id: string,
-  params: undefined | GetMatchSlotsParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getMatchSlots>>, TError, TData>
-    > &
-      Pick<
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMatchSlots>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetMatchSlotsQueryResult = NonNullable<Awaited<ReturnType<typeof getMatchSlots>>>
+export type GetMatchSlotsQueryError = unknown
+
+
+export function useGetMatchSlots<TData = Awaited<ReturnType<typeof getMatchSlots>>, TError = unknown>(
+ id: string,
+    params: undefined |  GetMatchSlotsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMatchSlots>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getMatchSlots>>,
           TError,
           Awaited<ReturnType<typeof getMatchSlots>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useGetMatchSlots<
-  TData = Awaited<ReturnType<typeof getMatchSlots>>,
-  TError = unknown,
->(
-  id: string,
-  params?: GetMatchSlotsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getMatchSlots>>, TError, TData>
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetMatchSlots<TData = Awaited<ReturnType<typeof getMatchSlots>>, TError = unknown>(
+ id: string,
+    params?: GetMatchSlotsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMatchSlots>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getMatchSlots>>,
           TError,
           Awaited<ReturnType<typeof getMatchSlots>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useGetMatchSlots<
-  TData = Awaited<ReturnType<typeof getMatchSlots>>,
-  TError = unknown,
->(
-  id: string,
-  params?: GetMatchSlotsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getMatchSlots>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetMatchSlots<TData = Awaited<ReturnType<typeof getMatchSlots>>, TError = unknown>(
+ id: string,
+    params?: GetMatchSlotsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMatchSlots>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetMatchSlots<
-  TData = Awaited<ReturnType<typeof getMatchSlots>>,
-  TError = unknown,
->(
-  id: string,
-  params?: GetMatchSlotsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getMatchSlots>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getGetMatchSlotsQueryOptions(id, params, options);
+export function useGetMatchSlots<TData = Awaited<ReturnType<typeof getMatchSlots>>, TError = unknown>(
+ id: string,
+    params?: GetMatchSlotsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMatchSlots>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getGetMatchSlotsQueryOptions(id,params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
+
+
+
+
+
+

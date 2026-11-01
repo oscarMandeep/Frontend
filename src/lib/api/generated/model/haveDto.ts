@@ -4,14 +4,14 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { SkillRefDto } from "./skillRefDto";
+import type { SkillRefDto } from './skillRefDto';
 
 export interface HaveDto {
   skill: SkillRefDto;
   /**
-   * @minimum 1
-   * @maximum 5
-   */
+     * @minimum 1
+     * @maximum 5
+     */
   level: number;
   verified: boolean;
 }

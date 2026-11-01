@@ -4,7 +4,9 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import { useQuery } from "@tanstack/react-query";
+import {
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -14,8 +16,8 @@ import type {
   QueryKey,
   UndefinedInitialDataOptions,
   UseQueryOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+  UseQueryResult
+} from '@tanstack/react-query';
 
 import type {
   ListPublicSkillsParams,
@@ -24,22 +26,22 @@ import type {
   PublicSkillCityDto,
   PublicSkillDto,
   PublicSkillSummaryDto,
-  PublicStatsDto,
-} from "../model";
+  PublicStatsDto
+} from '../model';
 
-import { apiFetch } from "../../fetcher";
+import { apiFetch } from '../../fetcher';
+
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-const withQueryKey = <T extends object, K>(
-  query: T,
-  queryKey: K,
-): T & { queryKey: K } => {
+
+
+const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKey: K } => {
   const result = { queryKey } as T & { queryKey: K };
   for (const key of Object.keys(query)) {
     // The explicit queryKey always wins, matching the previous
     // `{ ...query, queryKey }` spread where it was set last.
-    if (key === "queryKey") continue;
+    if (key === 'queryKey') continue;
     Object.defineProperty(result, key, {
       enumerable: true,
       configurable: true,
@@ -50,990 +52,653 @@ const withQueryKey = <T extends object, K>(
 };
 
 export type getPublicStatsResponse200 = {
-  data: PublicStatsDto;
-  status: 200;
-};
+  data: PublicStatsDto
+  status: 200
+}
 
-export type getPublicStatsResponseSuccess = getPublicStatsResponse200 & {
+export type getPublicStatsResponseSuccess = (getPublicStatsResponse200) & {
   headers: Headers;
 };
-export type getPublicStatsResponse = getPublicStatsResponseSuccess;
+;
+
+export type getPublicStatsResponse = (getPublicStatsResponseSuccess)
 
 export const getGetPublicStatsUrl = () => {
-  return `/v1/public/stats`;
-};
 
-export const getPublicStats = async (
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<getPublicStatsResponse> => {
-  return apiFetch<getPublicStatsResponse>(getGetPublicStatsUrl(), {
+
+
+
+  return `/v1/public/stats`
+}
+
+export const getPublicStats = async ( options?: Parameters<typeof apiFetch>[1]): Promise<getPublicStatsResponse> => {
+
+  return apiFetch<getPublicStatsResponse>(getGetPublicStatsUrl(),
+  {
     ...options,
-    method: "GET",
-  });
-};
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
 
 export const getGetPublicStatsQueryKey = () => {
-  return [`/v1/public/stats`] as const;
-};
+    return [
+    `/v1/public/stats`
+    ] as const;
+    }
 
-export const getGetPublicStatsQueryOptions = <
-  TData = Awaited<ReturnType<typeof getPublicStats>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof getPublicStats>>, TError, TData>
-  >;
-  request?: SecondParameter<typeof apiFetch>;
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetPublicStatsQueryKey();
+export const getGetPublicStatsQueryOptions = <TData = Awaited<ReturnType<typeof getPublicStats>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicStats>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+) => {
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getPublicStats>>> = ({
-    signal,
-  }) => getPublicStats({ signal, ...requestOptions });
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getPublicStats>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+  const queryKey =  queryOptions?.queryKey ?? getGetPublicStatsQueryKey();
 
-export type GetPublicStatsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getPublicStats>>
->;
-export type GetPublicStatsQueryError = unknown;
 
-export function useGetPublicStats<
-  TData = Awaited<ReturnType<typeof getPublicStats>>,
-  TError = unknown,
->(
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getPublicStats>>, TError, TData>
-    > &
-      Pick<
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPublicStats>>> = ({ signal }) => getPublicStats({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPublicStats>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetPublicStatsQueryResult = NonNullable<Awaited<ReturnType<typeof getPublicStats>>>
+export type GetPublicStatsQueryError = unknown
+
+
+export function useGetPublicStats<TData = Awaited<ReturnType<typeof getPublicStats>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicStats>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getPublicStats>>,
           TError,
           Awaited<ReturnType<typeof getPublicStats>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useGetPublicStats<
-  TData = Awaited<ReturnType<typeof getPublicStats>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getPublicStats>>, TError, TData>
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetPublicStats<TData = Awaited<ReturnType<typeof getPublicStats>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicStats>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getPublicStats>>,
           TError,
           Awaited<ReturnType<typeof getPublicStats>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useGetPublicStats<
-  TData = Awaited<ReturnType<typeof getPublicStats>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getPublicStats>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetPublicStats<TData = Awaited<ReturnType<typeof getPublicStats>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicStats>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetPublicStats<
-  TData = Awaited<ReturnType<typeof getPublicStats>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getPublicStats>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getGetPublicStatsQueryOptions(options);
+export function useGetPublicStats<TData = Awaited<ReturnType<typeof getPublicStats>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicStats>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getGetPublicStatsQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
 
-export type listPublicSkillsResponse200 = {
-  data: PublicSkillSummaryDto[];
-  status: 200;
-};
 
-export type listPublicSkillsResponseSuccess = listPublicSkillsResponse200 & {
+
+
+
+
+export type listPublicSkillsResponse200 = {
+  data: PublicSkillSummaryDto[]
+  status: 200
+}
+
+export type listPublicSkillsResponseSuccess = (listPublicSkillsResponse200) & {
   headers: Headers;
 };
-export type listPublicSkillsResponse = listPublicSkillsResponseSuccess;
+;
 
-export const getListPublicSkillsUrl = (params?: ListPublicSkillsParams) => {
+export type listPublicSkillsResponse = (listPublicSkillsResponseSuccess)
+
+export const getListPublicSkillsUrl = (params?: ListPublicSkillsParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
+      normalizedParams.append(key, value === null ? 'null' : String(value))
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/v1/public/skills?${stringifiedParams}`
-    : `/v1/public/skills`;
-};
+  return stringifiedParams.length > 0 ? `/v1/public/skills?${stringifiedParams}` : `/v1/public/skills`
+}
 
-export const listPublicSkills = async (
-  params?: ListPublicSkillsParams,
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<listPublicSkillsResponse> => {
-  return apiFetch<listPublicSkillsResponse>(getListPublicSkillsUrl(params), {
+export const listPublicSkills = async (params?: ListPublicSkillsParams, options?: Parameters<typeof apiFetch>[1]): Promise<listPublicSkillsResponse> => {
+
+  return apiFetch<listPublicSkillsResponse>(getListPublicSkillsUrl(params),
+  {
     ...options,
-    method: "GET",
-  });
-};
+    method: 'GET'
 
-export const getListPublicSkillsQueryKey = (
-  params?: ListPublicSkillsParams,
+
+  }
+);}
+
+
+
+
+
+export const getListPublicSkillsQueryKey = (params?: ListPublicSkillsParams,) => {
+    return [
+    `/v1/public/skills`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListPublicSkillsQueryOptions = <TData = Awaited<ReturnType<typeof listPublicSkills>>, TError = unknown>(params?: ListPublicSkillsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPublicSkills>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
 ) => {
-  return [`/v1/public/skills`, ...(params ? [params] : [])] as const;
-};
 
-export const getListPublicSkillsQueryOptions = <
-  TData = Awaited<ReturnType<typeof listPublicSkills>>,
-  TError = unknown,
->(
-  params?: ListPublicSkillsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof listPublicSkills>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =
-    queryOptions?.queryKey ?? getListPublicSkillsQueryKey(params);
+  const queryKey =  queryOptions?.queryKey ?? getListPublicSkillsQueryKey(params);
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof listPublicSkills>>
-  > = ({ signal }) => listPublicSkills(params, { signal, ...requestOptions });
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof listPublicSkills>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
 
-export type ListPublicSkillsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof listPublicSkills>>
->;
-export type ListPublicSkillsQueryError = unknown;
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPublicSkills>>> = ({ signal }) => listPublicSkills(params, { signal, ...requestOptions });
 
-export function useListPublicSkills<
-  TData = Awaited<ReturnType<typeof listPublicSkills>>,
-  TError = unknown,
->(
-  params: undefined | ListPublicSkillsParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof listPublicSkills>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPublicSkills>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ListPublicSkillsQueryResult = NonNullable<Awaited<ReturnType<typeof listPublicSkills>>>
+export type ListPublicSkillsQueryError = unknown
+
+
+export function useListPublicSkills<TData = Awaited<ReturnType<typeof listPublicSkills>>, TError = unknown>(
+ params: undefined |  ListPublicSkillsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPublicSkills>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof listPublicSkills>>,
           TError,
           Awaited<ReturnType<typeof listPublicSkills>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useListPublicSkills<
-  TData = Awaited<ReturnType<typeof listPublicSkills>>,
-  TError = unknown,
->(
-  params?: ListPublicSkillsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof listPublicSkills>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListPublicSkills<TData = Awaited<ReturnType<typeof listPublicSkills>>, TError = unknown>(
+ params?: ListPublicSkillsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPublicSkills>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof listPublicSkills>>,
           TError,
           Awaited<ReturnType<typeof listPublicSkills>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useListPublicSkills<
-  TData = Awaited<ReturnType<typeof listPublicSkills>>,
-  TError = unknown,
->(
-  params?: ListPublicSkillsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof listPublicSkills>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListPublicSkills<TData = Awaited<ReturnType<typeof listPublicSkills>>, TError = unknown>(
+ params?: ListPublicSkillsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPublicSkills>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useListPublicSkills<
-  TData = Awaited<ReturnType<typeof listPublicSkills>>,
-  TError = unknown,
->(
-  params?: ListPublicSkillsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof listPublicSkills>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getListPublicSkillsQueryOptions(params, options);
+export function useListPublicSkills<TData = Awaited<ReturnType<typeof listPublicSkills>>, TError = unknown>(
+ params?: ListPublicSkillsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPublicSkills>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getListPublicSkillsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
+
+
+
+
+
 
 export type getPublicSkillResponse200 = {
-  data: PublicSkillDto;
-  status: 200;
-};
+  data: PublicSkillDto
+  status: 200
+}
 
-export type getPublicSkillResponseSuccess = getPublicSkillResponse200 & {
+export type getPublicSkillResponseSuccess = (getPublicSkillResponse200) & {
   headers: Headers;
 };
-export type getPublicSkillResponse = getPublicSkillResponseSuccess;
+;
 
-export const getGetPublicSkillUrl = (slug: string) => {
-  return `/v1/public/skills/${slug}`;
-};
+export type getPublicSkillResponse = (getPublicSkillResponseSuccess)
 
-export const getPublicSkill = async (
-  slug: string,
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<getPublicSkillResponse> => {
-  return apiFetch<getPublicSkillResponse>(getGetPublicSkillUrl(slug), {
+export const getGetPublicSkillUrl = (slug: string,) => {
+
+
+
+
+  return `/v1/public/skills/${slug}`
+}
+
+export const getPublicSkill = async (slug: string, options?: Parameters<typeof apiFetch>[1]): Promise<getPublicSkillResponse> => {
+
+  return apiFetch<getPublicSkillResponse>(getGetPublicSkillUrl(slug),
+  {
     ...options,
-    method: "GET",
-  });
-};
+    method: 'GET'
 
-export const getGetPublicSkillQueryKey = (slug: string) => {
-  return [`/v1/public/skills/${slug}`] as const;
-};
 
-export const getGetPublicSkillQueryOptions = <
-  TData = Awaited<ReturnType<typeof getPublicSkill>>,
-  TError = unknown,
->(
-  slug: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getPublicSkill>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
+  }
+);}
+
+
+
+
+
+export const getGetPublicSkillQueryKey = (slug: string,) => {
+    return [
+    `/v1/public/skills/${slug}`
+    ] as const;
+    }
+
+
+export const getGetPublicSkillQueryOptions = <TData = Awaited<ReturnType<typeof getPublicSkill>>, TError = unknown>(slug: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicSkill>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetPublicSkillQueryKey(slug);
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getPublicSkill>>> = ({
-    signal,
-  }) => getPublicSkill(slug, { signal, ...requestOptions });
+  const queryKey =  queryOptions?.queryKey ?? getGetPublicSkillQueryKey(slug);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: slug !== null && slug !== undefined,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof getPublicSkill>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
 
-export type GetPublicSkillQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getPublicSkill>>
->;
-export type GetPublicSkillQueryError = unknown;
 
-export function useGetPublicSkill<
-  TData = Awaited<ReturnType<typeof getPublicSkill>>,
-  TError = unknown,
->(
-  slug: string,
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getPublicSkill>>, TError, TData>
-    > &
-      Pick<
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPublicSkill>>> = ({ signal }) => getPublicSkill(slug, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: slug !== null && slug !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPublicSkill>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetPublicSkillQueryResult = NonNullable<Awaited<ReturnType<typeof getPublicSkill>>>
+export type GetPublicSkillQueryError = unknown
+
+
+export function useGetPublicSkill<TData = Awaited<ReturnType<typeof getPublicSkill>>, TError = unknown>(
+ slug: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicSkill>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getPublicSkill>>,
           TError,
           Awaited<ReturnType<typeof getPublicSkill>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useGetPublicSkill<
-  TData = Awaited<ReturnType<typeof getPublicSkill>>,
-  TError = unknown,
->(
-  slug: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getPublicSkill>>, TError, TData>
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetPublicSkill<TData = Awaited<ReturnType<typeof getPublicSkill>>, TError = unknown>(
+ slug: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicSkill>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getPublicSkill>>,
           TError,
           Awaited<ReturnType<typeof getPublicSkill>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useGetPublicSkill<
-  TData = Awaited<ReturnType<typeof getPublicSkill>>,
-  TError = unknown,
->(
-  slug: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getPublicSkill>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetPublicSkill<TData = Awaited<ReturnType<typeof getPublicSkill>>, TError = unknown>(
+ slug: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicSkill>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetPublicSkill<
-  TData = Awaited<ReturnType<typeof getPublicSkill>>,
-  TError = unknown,
->(
-  slug: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getPublicSkill>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getGetPublicSkillQueryOptions(slug, options);
+export function useGetPublicSkill<TData = Awaited<ReturnType<typeof getPublicSkill>>, TError = unknown>(
+ slug: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicSkill>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getGetPublicSkillQueryOptions(slug,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
+
+
+
+
+
 
 export type getPublicSkillInCityResponse200 = {
-  data: PublicSkillCityDto;
-  status: 200;
+  data: PublicSkillCityDto
+  status: 200
+}
+
+export type getPublicSkillInCityResponseSuccess = (getPublicSkillInCityResponse200) & {
+  headers: Headers;
 };
+;
 
-export type getPublicSkillInCityResponseSuccess =
-  getPublicSkillInCityResponse200 & {
-    headers: Headers;
-  };
-export type getPublicSkillInCityResponse = getPublicSkillInCityResponseSuccess;
+export type getPublicSkillInCityResponse = (getPublicSkillInCityResponseSuccess)
 
-export const getGetPublicSkillInCityUrl = (slug: string, city: string) => {
-  return `/v1/public/skills/${slug}/cities/${city}`;
-};
+export const getGetPublicSkillInCityUrl = (slug: string,
+    city: string,) => {
 
-export const getPublicSkillInCity = async (
-  slug: string,
-  city: string,
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<getPublicSkillInCityResponse> => {
-  return apiFetch<getPublicSkillInCityResponse>(
-    getGetPublicSkillInCityUrl(slug, city),
-    {
-      ...options,
-      method: "GET",
-    },
-  );
-};
 
-export const getGetPublicSkillInCityQueryKey = (slug: string, city: string) => {
-  return [`/v1/public/skills/${slug}/cities/${city}`] as const;
-};
 
-export const getGetPublicSkillInCityQueryOptions = <
-  TData = Awaited<ReturnType<typeof getPublicSkillInCity>>,
-  TError = unknown,
->(
-  slug: string,
-  city: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof getPublicSkillInCity>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
+
+  return `/v1/public/skills/${slug}/cities/${city}`
+}
+
+export const getPublicSkillInCity = async (slug: string,
+    city: string, options?: Parameters<typeof apiFetch>[1]): Promise<getPublicSkillInCityResponse> => {
+
+  return apiFetch<getPublicSkillInCityResponse>(getGetPublicSkillInCityUrl(slug,city),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPublicSkillInCityQueryKey = (slug: string,
+    city: string,) => {
+    return [
+    `/v1/public/skills/${slug}/cities/${city}`
+    ] as const;
+    }
+
+
+export const getGetPublicSkillInCityQueryOptions = <TData = Awaited<ReturnType<typeof getPublicSkillInCity>>, TError = unknown>(slug: string,
+    city: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicSkillInCity>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey =
-    queryOptions?.queryKey ?? getGetPublicSkillInCityQueryKey(slug, city);
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getPublicSkillInCity>>
-  > = ({ signal }) =>
-    getPublicSkillInCity(slug, city, { signal, ...requestOptions });
+  const queryKey =  queryOptions?.queryKey ?? getGetPublicSkillInCityQueryKey(slug,city);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled:
-      slug !== null &&
-      slug !== undefined &&
-      city !== null &&
-      city !== undefined,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof getPublicSkillInCity>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
 
-export type GetPublicSkillInCityQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getPublicSkillInCity>>
->;
-export type GetPublicSkillInCityQueryError = unknown;
 
-export function useGetPublicSkillInCity<
-  TData = Awaited<ReturnType<typeof getPublicSkillInCity>>,
-  TError = unknown,
->(
-  slug: string,
-  city: string,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof getPublicSkillInCity>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPublicSkillInCity>>> = ({ signal }) => getPublicSkillInCity(slug,city, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: slug !== null && slug !== undefined && city !== null && city !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPublicSkillInCity>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetPublicSkillInCityQueryResult = NonNullable<Awaited<ReturnType<typeof getPublicSkillInCity>>>
+export type GetPublicSkillInCityQueryError = unknown
+
+
+export function useGetPublicSkillInCity<TData = Awaited<ReturnType<typeof getPublicSkillInCity>>, TError = unknown>(
+ slug: string,
+    city: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicSkillInCity>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getPublicSkillInCity>>,
           TError,
           Awaited<ReturnType<typeof getPublicSkillInCity>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useGetPublicSkillInCity<
-  TData = Awaited<ReturnType<typeof getPublicSkillInCity>>,
-  TError = unknown,
->(
-  slug: string,
-  city: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof getPublicSkillInCity>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetPublicSkillInCity<TData = Awaited<ReturnType<typeof getPublicSkillInCity>>, TError = unknown>(
+ slug: string,
+    city: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicSkillInCity>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getPublicSkillInCity>>,
           TError,
           Awaited<ReturnType<typeof getPublicSkillInCity>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useGetPublicSkillInCity<
-  TData = Awaited<ReturnType<typeof getPublicSkillInCity>>,
-  TError = unknown,
->(
-  slug: string,
-  city: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof getPublicSkillInCity>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetPublicSkillInCity<TData = Awaited<ReturnType<typeof getPublicSkillInCity>>, TError = unknown>(
+ slug: string,
+    city: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicSkillInCity>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetPublicSkillInCity<
-  TData = Awaited<ReturnType<typeof getPublicSkillInCity>>,
-  TError = unknown,
->(
-  slug: string,
-  city: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof getPublicSkillInCity>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getGetPublicSkillInCityQueryOptions(slug, city, options);
+export function useGetPublicSkillInCity<TData = Awaited<ReturnType<typeof getPublicSkillInCity>>, TError = unknown>(
+ slug: string,
+    city: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicSkillInCity>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getGetPublicSkillInCityQueryOptions(slug,city,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
+
+
+
+
+
 
 export type getPublicProfileResponse200 = {
-  data: PublicProfileDto;
-  status: 200;
-};
+  data: PublicProfileDto
+  status: 200
+}
 
-export type getPublicProfileResponseSuccess = getPublicProfileResponse200 & {
+export type getPublicProfileResponseSuccess = (getPublicProfileResponse200) & {
   headers: Headers;
 };
-export type getPublicProfileResponse = getPublicProfileResponseSuccess;
+;
 
-export const getGetPublicProfileUrl = (username: string) => {
-  return `/v1/public/users/${username}`;
-};
+export type getPublicProfileResponse = (getPublicProfileResponseSuccess)
 
-export const getPublicProfile = async (
-  username: string,
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<getPublicProfileResponse> => {
-  return apiFetch<getPublicProfileResponse>(getGetPublicProfileUrl(username), {
+export const getGetPublicProfileUrl = (username: string,) => {
+
+
+
+
+  return `/v1/public/users/${username}`
+}
+
+export const getPublicProfile = async (username: string, options?: Parameters<typeof apiFetch>[1]): Promise<getPublicProfileResponse> => {
+
+  return apiFetch<getPublicProfileResponse>(getGetPublicProfileUrl(username),
+  {
     ...options,
-    method: "GET",
-  });
-};
+    method: 'GET'
 
-export const getGetPublicProfileQueryKey = (username: string) => {
-  return [`/v1/public/users/${username}`] as const;
-};
 
-export const getGetPublicProfileQueryOptions = <
-  TData = Awaited<ReturnType<typeof getPublicProfile>>,
-  TError = unknown,
->(
-  username: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof getPublicProfile>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
+  }
+);}
+
+
+
+
+
+export const getGetPublicProfileQueryKey = (username: string,) => {
+    return [
+    `/v1/public/users/${username}`
+    ] as const;
+    }
+
+
+export const getGetPublicProfileQueryOptions = <TData = Awaited<ReturnType<typeof getPublicProfile>>, TError = unknown>(username: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicProfile>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey =
-    queryOptions?.queryKey ?? getGetPublicProfileQueryKey(username);
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getPublicProfile>>
-  > = ({ signal }) => getPublicProfile(username, { signal, ...requestOptions });
+  const queryKey =  queryOptions?.queryKey ?? getGetPublicProfileQueryKey(username);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: username !== null && username !== undefined,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof getPublicProfile>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
 
-export type GetPublicProfileQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getPublicProfile>>
->;
-export type GetPublicProfileQueryError = unknown;
 
-export function useGetPublicProfile<
-  TData = Awaited<ReturnType<typeof getPublicProfile>>,
-  TError = unknown,
->(
-  username: string,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof getPublicProfile>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPublicProfile>>> = ({ signal }) => getPublicProfile(username, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: username !== null && username !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPublicProfile>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetPublicProfileQueryResult = NonNullable<Awaited<ReturnType<typeof getPublicProfile>>>
+export type GetPublicProfileQueryError = unknown
+
+
+export function useGetPublicProfile<TData = Awaited<ReturnType<typeof getPublicProfile>>, TError = unknown>(
+ username: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicProfile>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getPublicProfile>>,
           TError,
           Awaited<ReturnType<typeof getPublicProfile>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useGetPublicProfile<
-  TData = Awaited<ReturnType<typeof getPublicProfile>>,
-  TError = unknown,
->(
-  username: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof getPublicProfile>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetPublicProfile<TData = Awaited<ReturnType<typeof getPublicProfile>>, TError = unknown>(
+ username: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicProfile>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getPublicProfile>>,
           TError,
           Awaited<ReturnType<typeof getPublicProfile>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useGetPublicProfile<
-  TData = Awaited<ReturnType<typeof getPublicProfile>>,
-  TError = unknown,
->(
-  username: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof getPublicProfile>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetPublicProfile<TData = Awaited<ReturnType<typeof getPublicProfile>>, TError = unknown>(
+ username: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicProfile>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetPublicProfile<
-  TData = Awaited<ReturnType<typeof getPublicProfile>>,
-  TError = unknown,
->(
-  username: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof getPublicProfile>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getGetPublicProfileQueryOptions(username, options);
+export function useGetPublicProfile<TData = Awaited<ReturnType<typeof getPublicProfile>>, TError = unknown>(
+ username: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicProfile>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getGetPublicProfileQueryOptions(username,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
+
+
+
+
+
 
 export type getPublicSitemapResponse200 = {
-  data: PublicSitemapDto;
-  status: 200;
-};
+  data: PublicSitemapDto
+  status: 200
+}
 
-export type getPublicSitemapResponseSuccess = getPublicSitemapResponse200 & {
+export type getPublicSitemapResponseSuccess = (getPublicSitemapResponse200) & {
   headers: Headers;
 };
-export type getPublicSitemapResponse = getPublicSitemapResponseSuccess;
+;
+
+export type getPublicSitemapResponse = (getPublicSitemapResponseSuccess)
 
 export const getGetPublicSitemapUrl = () => {
-  return `/v1/public/sitemap`;
-};
 
-export const getPublicSitemap = async (
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<getPublicSitemapResponse> => {
-  return apiFetch<getPublicSitemapResponse>(getGetPublicSitemapUrl(), {
+
+
+
+  return `/v1/public/sitemap`
+}
+
+export const getPublicSitemap = async ( options?: Parameters<typeof apiFetch>[1]): Promise<getPublicSitemapResponse> => {
+
+  return apiFetch<getPublicSitemapResponse>(getGetPublicSitemapUrl(),
+  {
     ...options,
-    method: "GET",
-  });
-};
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
 
 export const getGetPublicSitemapQueryKey = () => {
-  return [`/v1/public/sitemap`] as const;
-};
+    return [
+    `/v1/public/sitemap`
+    ] as const;
+    }
 
-export const getGetPublicSitemapQueryOptions = <
-  TData = Awaited<ReturnType<typeof getPublicSitemap>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof getPublicSitemap>>, TError, TData>
-  >;
-  request?: SecondParameter<typeof apiFetch>;
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetPublicSitemapQueryKey();
+export const getGetPublicSitemapQueryOptions = <TData = Awaited<ReturnType<typeof getPublicSitemap>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicSitemap>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+) => {
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getPublicSitemap>>
-  > = ({ signal }) => getPublicSitemap({ signal, ...requestOptions });
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getPublicSitemap>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+  const queryKey =  queryOptions?.queryKey ?? getGetPublicSitemapQueryKey();
 
-export type GetPublicSitemapQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getPublicSitemap>>
->;
-export type GetPublicSitemapQueryError = unknown;
 
-export function useGetPublicSitemap<
-  TData = Awaited<ReturnType<typeof getPublicSitemap>>,
-  TError = unknown,
->(
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof getPublicSitemap>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPublicSitemap>>> = ({ signal }) => getPublicSitemap({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPublicSitemap>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetPublicSitemapQueryResult = NonNullable<Awaited<ReturnType<typeof getPublicSitemap>>>
+export type GetPublicSitemapQueryError = unknown
+
+
+export function useGetPublicSitemap<TData = Awaited<ReturnType<typeof getPublicSitemap>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicSitemap>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getPublicSitemap>>,
           TError,
           Awaited<ReturnType<typeof getPublicSitemap>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useGetPublicSitemap<
-  TData = Awaited<ReturnType<typeof getPublicSitemap>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof getPublicSitemap>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetPublicSitemap<TData = Awaited<ReturnType<typeof getPublicSitemap>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicSitemap>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getPublicSitemap>>,
           TError,
           Awaited<ReturnType<typeof getPublicSitemap>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useGetPublicSitemap<
-  TData = Awaited<ReturnType<typeof getPublicSitemap>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof getPublicSitemap>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetPublicSitemap<TData = Awaited<ReturnType<typeof getPublicSitemap>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicSitemap>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetPublicSitemap<
-  TData = Awaited<ReturnType<typeof getPublicSitemap>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof getPublicSitemap>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getGetPublicSitemapQueryOptions(options);
+export function useGetPublicSitemap<TData = Awaited<ReturnType<typeof getPublicSitemap>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicSitemap>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getGetPublicSitemapQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
+
+
+
+
+
+

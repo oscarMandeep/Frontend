@@ -4,339 +4,290 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import { useMutation } from "@tanstack/react-query";
+import {
+  useMutation
+} from '@tanstack/react-query';
 import type {
   MutationFunction,
   QueryClient,
   UseMutationOptions,
-  UseMutationResult,
-} from "@tanstack/react-query";
+  UseMutationResult
+} from '@tanstack/react-query';
 
-import type { BlockUserDto, ReportUserDto } from "../model";
+import type {
+  BlockUserDto,
+  ReportUserDto
+} from '../model';
 
-import { apiFetch } from "../../fetcher";
+import { apiFetch } from '../../fetcher';
+
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-export type blockUserResponse204 = {
-  data: void;
-  status: 204;
-};
 
-export type blockUserResponseSuccess = blockUserResponse204 & {
+
+export type blockUserResponse204 = {
+  data: void
+  status: 204
+}
+
+export type blockUserResponseSuccess = (blockUserResponse204) & {
   headers: Headers;
 };
-export type blockUserResponse = blockUserResponseSuccess;
+;
+
+export type blockUserResponse = (blockUserResponseSuccess)
 
 export const getBlockUserUrl = () => {
-  return `/v1/blocks`;
-};
 
-export const blockUser = async (
-  blockUserDto: BlockUserDto,
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<blockUserResponse> => {
-  const getHeaders = (
-    h?: NonNullable<RequestInit["headers"]>,
-  ): Record<string, string | readonly string[]> => {
+
+
+
+  return `/v1/blocks`
+}
+
+export const blockUser = async (blockUserDto: BlockUserDto, options?: Parameters<typeof apiFetch>[1]): Promise<blockUserResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Symbol.iterator in h) {
       return Object.fromEntries(
-        Array.from(
-          h as Iterable<Iterable<string>>,
-          (entry) => Array.from(entry) as [string, string],
-        ),
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<
-      string | readonly string[] | undefined
-    >(h)) {
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
       if (value !== undefined) headers[name] = value;
     }
     return headers;
   };
-  return apiFetch<blockUserResponse>(getBlockUserUrl(), {
+return apiFetch<blockUserResponse>(getBlockUserUrl(),
+  {
     ...options,
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...getHeaders(options?.headers),
-    },
-    body: JSON.stringify(blockUserDto),
-  });
-};
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(blockUserDto)
+  }
+);}
 
-export const getBlockUserMutationKey = () => ["blockUser"] as const;
 
-export const getBlockUserMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof blockUser>>,
-    TError,
-    BlockUserMutationVariables,
-    TContext
-  >;
-  request?: SecondParameter<typeof apiFetch>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof blockUser>>,
-  TError,
-  BlockUserMutationVariables,
-  TContext
-> => {
-  const mutationKey = getBlockUserMutationKey();
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof blockUser>>,
-    BlockUserMutationVariables
-  > = (props) => {
-    const { data } = props ?? {};
 
-    return blockUser(data, requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
+export const getBlockUserMutationKey = () => ['blockUser'] as const;
 
-export type BlockUserMutationResult = NonNullable<
-  Awaited<ReturnType<typeof blockUser>>
->;
-export type BlockUserMutationBody = BlockUserDto;
-export type BlockUserMutationError = unknown;
-export type BlockUserMutationVariables = { data: BlockUserDto };
+export const getBlockUserMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof blockUser>>, TError,BlockUserMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof blockUser>>, TError,BlockUserMutationVariables, TContext> => {
 
-export const useBlockUser = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof blockUser>>,
-      TError,
-      BlockUserMutationVariables,
-      TContext
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof blockUser>>,
-  TError,
-  BlockUserMutationVariables,
-  TContext
-> => {
-  return useMutation(getBlockUserMutationOptions(options), queryClient);
-};
-export type unblockUserResponse204 = {
-  data: void;
-  status: 204;
-};
+const mutationKey = getBlockUserMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
 
-export type unblockUserResponseSuccess = unblockUserResponse204 & {
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof blockUser>>, BlockUserMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  blockUser(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type BlockUserMutationResult = NonNullable<Awaited<ReturnType<typeof blockUser>>>
+    export type BlockUserMutationBody = BlockUserDto
+    export type BlockUserMutationError = unknown
+    export type BlockUserMutationVariables = {data: BlockUserDto}
+
+    export const useBlockUser = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof blockUser>>, TError,BlockUserMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof blockUser>>,
+        TError,
+        BlockUserMutationVariables,
+        TContext
+      > => {
+      return useMutation(getBlockUserMutationOptions(options), queryClient);
+    }
+    export type unblockUserResponse204 = {
+  data: void
+  status: 204
+}
+
+export type unblockUserResponseSuccess = (unblockUserResponse204) & {
   headers: Headers;
 };
-export type unblockUserResponse = unblockUserResponseSuccess;
+;
 
-export const getUnblockUserUrl = (userId: string) => {
-  return `/v1/blocks/${userId}`;
-};
+export type unblockUserResponse = (unblockUserResponseSuccess)
 
-export const unblockUser = async (
-  userId: string,
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<unblockUserResponse> => {
-  return apiFetch<unblockUserResponse>(getUnblockUserUrl(userId), {
+export const getUnblockUserUrl = (userId: string,) => {
+
+
+
+
+  return `/v1/blocks/${userId}`
+}
+
+export const unblockUser = async (userId: string, options?: Parameters<typeof apiFetch>[1]): Promise<unblockUserResponse> => {
+
+  return apiFetch<unblockUserResponse>(getUnblockUserUrl(userId),
+  {
     ...options,
-    method: "DELETE",
-  });
-};
+    method: 'DELETE'
 
-export const getUnblockUserMutationKey = () => ["unblockUser"] as const;
 
-export const getUnblockUserMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof unblockUser>>,
-    TError,
-    UnblockUserMutationVariables,
-    TContext
-  >;
-  request?: SecondParameter<typeof apiFetch>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof unblockUser>>,
-  TError,
-  UnblockUserMutationVariables,
-  TContext
-> => {
-  const mutationKey = getUnblockUserMutationKey();
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
+  }
+);}
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof unblockUser>>,
-    UnblockUserMutationVariables
-  > = (props) => {
-    const { userId } = props ?? {};
 
-    return unblockUser(userId, requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
 
-export type UnblockUserMutationResult = NonNullable<
-  Awaited<ReturnType<typeof unblockUser>>
->;
 
-export type UnblockUserMutationError = unknown;
-export type UnblockUserMutationVariables = { userId: string };
+export const getUnblockUserMutationKey = () => ['unblockUser'] as const;
 
-export const useUnblockUser = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof unblockUser>>,
-      TError,
-      UnblockUserMutationVariables,
-      TContext
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof unblockUser>>,
-  TError,
-  UnblockUserMutationVariables,
-  TContext
-> => {
-  return useMutation(getUnblockUserMutationOptions(options), queryClient);
-};
-export type reportUserResponse201 = {
-  data: void;
-  status: 201;
-};
+export const getUnblockUserMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unblockUser>>, TError,UnblockUserMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof unblockUser>>, TError,UnblockUserMutationVariables, TContext> => {
 
-export type reportUserResponseSuccess = reportUserResponse201 & {
+const mutationKey = getUnblockUserMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof unblockUser>>, UnblockUserMutationVariables> = (props) => {
+          const {userId} = props ?? {};
+
+          return  unblockUser(userId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UnblockUserMutationResult = NonNullable<Awaited<ReturnType<typeof unblockUser>>>
+
+    export type UnblockUserMutationError = unknown
+    export type UnblockUserMutationVariables = {userId: string}
+
+    export const useUnblockUser = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unblockUser>>, TError,UnblockUserMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof unblockUser>>,
+        TError,
+        UnblockUserMutationVariables,
+        TContext
+      > => {
+      return useMutation(getUnblockUserMutationOptions(options), queryClient);
+    }
+    export type reportUserResponse201 = {
+  data: void
+  status: 201
+}
+
+export type reportUserResponseSuccess = (reportUserResponse201) & {
   headers: Headers;
 };
-export type reportUserResponse = reportUserResponseSuccess;
+;
+
+export type reportUserResponse = (reportUserResponseSuccess)
 
 export const getReportUserUrl = () => {
-  return `/v1/reports`;
-};
 
-export const reportUser = async (
-  reportUserDto: ReportUserDto,
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<reportUserResponse> => {
-  const getHeaders = (
-    h?: NonNullable<RequestInit["headers"]>,
-  ): Record<string, string | readonly string[]> => {
+
+
+
+  return `/v1/reports`
+}
+
+export const reportUser = async (reportUserDto: ReportUserDto, options?: Parameters<typeof apiFetch>[1]): Promise<reportUserResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Symbol.iterator in h) {
       return Object.fromEntries(
-        Array.from(
-          h as Iterable<Iterable<string>>,
-          (entry) => Array.from(entry) as [string, string],
-        ),
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<
-      string | readonly string[] | undefined
-    >(h)) {
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
       if (value !== undefined) headers[name] = value;
     }
     return headers;
   };
-  return apiFetch<reportUserResponse>(getReportUserUrl(), {
+return apiFetch<reportUserResponse>(getReportUserUrl(),
+  {
     ...options,
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...getHeaders(options?.headers),
-    },
-    body: JSON.stringify(reportUserDto),
-  });
-};
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(reportUserDto)
+  }
+);}
 
-export const getReportUserMutationKey = () => ["reportUser"] as const;
 
-export const getReportUserMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof reportUser>>,
-    TError,
-    ReportUserMutationVariables,
-    TContext
-  >;
-  request?: SecondParameter<typeof apiFetch>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof reportUser>>,
-  TError,
-  ReportUserMutationVariables,
-  TContext
-> => {
-  const mutationKey = getReportUserMutationKey();
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof reportUser>>,
-    ReportUserMutationVariables
-  > = (props) => {
-    const { data } = props ?? {};
 
-    return reportUser(data, requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
+export const getReportUserMutationKey = () => ['reportUser'] as const;
 
-export type ReportUserMutationResult = NonNullable<
-  Awaited<ReturnType<typeof reportUser>>
->;
-export type ReportUserMutationBody = ReportUserDto;
-export type ReportUserMutationError = unknown;
-export type ReportUserMutationVariables = { data: ReportUserDto };
+export const getReportUserMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reportUser>>, TError,ReportUserMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof reportUser>>, TError,ReportUserMutationVariables, TContext> => {
 
-export const useReportUser = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof reportUser>>,
-      TError,
-      ReportUserMutationVariables,
-      TContext
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof reportUser>>,
-  TError,
-  ReportUserMutationVariables,
-  TContext
-> => {
-  return useMutation(getReportUserMutationOptions(options), queryClient);
-};
+const mutationKey = getReportUserMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reportUser>>, ReportUserMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  reportUser(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReportUserMutationResult = NonNullable<Awaited<ReturnType<typeof reportUser>>>
+    export type ReportUserMutationBody = ReportUserDto
+    export type ReportUserMutationError = unknown
+    export type ReportUserMutationVariables = {data: ReportUserDto}
+
+    export const useReportUser = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reportUser>>, TError,ReportUserMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof reportUser>>,
+        TError,
+        ReportUserMutationVariables,
+        TContext
+      > => {
+      return useMutation(getReportUserMutationOptions(options), queryClient);
+    }

@@ -8,9 +8,9 @@
 export interface CreateReviewDto {
   sessionId: string;
   /**
-   * @minimum 1
-   * @maximum 5
-   */
+     * @minimum 1
+     * @maximum 5
+     */
   rating: number;
   /** @maxLength 1000 */
   comment?: string;

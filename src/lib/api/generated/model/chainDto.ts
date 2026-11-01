@@ -4,16 +4,16 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { ChainMemberDto } from "./chainMemberDto";
-import type { ChainStatus } from "./chainStatus";
+import type { ChainMemberDto } from './chainMemberDto';
+import type { ChainStatus } from './chainStatus';
 
 export interface ChainDto {
   id: string;
   status: ChainStatus;
   /**
-   * @minimum 0
-   * @maximum 100
-   */
+     * @minimum 0
+     * @maximum 100
+     */
   score: number;
   expiresAt: string;
   members: ChainMemberDto[];

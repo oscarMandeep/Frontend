@@ -11,11 +11,8 @@ import type {
   MessageDto,
   PaginatedMessagesDto,
 } from "@/lib/api/generated/model";
-import {
-  appendMessage,
-  messagesKey,
-  useSocket,
-} from "@/lib/socket/SocketProvider";
+import { appendMessage, messagesKey } from "@/lib/socket/messages-cache";
+import { useSocket } from "@/lib/socket/SocketProvider";
 import { ClientEvents, ServerEvents } from "@/lib/socket/events";
 
 export interface ChatItem {

@@ -4,133 +4,118 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import { useMutation } from "@tanstack/react-query";
+import {
+  useMutation
+} from '@tanstack/react-query';
 import type {
   MutationFunction,
   QueryClient,
   UseMutationOptions,
-  UseMutationResult,
-} from "@tanstack/react-query";
+  UseMutationResult
+} from '@tanstack/react-query';
 
-import type { CreateReviewDto, ReviewDto } from "../model";
+import type {
+  CreateReviewDto,
+  ReviewDto
+} from '../model';
 
-import { apiFetch } from "../../fetcher";
+import { apiFetch } from '../../fetcher';
+
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-export type createReviewResponse201 = {
-  data: ReviewDto;
-  status: 201;
-};
 
-export type createReviewResponseSuccess = createReviewResponse201 & {
+
+export type createReviewResponse201 = {
+  data: ReviewDto
+  status: 201
+}
+
+export type createReviewResponseSuccess = (createReviewResponse201) & {
   headers: Headers;
 };
-export type createReviewResponse = createReviewResponseSuccess;
+;
+
+export type createReviewResponse = (createReviewResponseSuccess)
 
 export const getCreateReviewUrl = () => {
-  return `/v1/reviews`;
-};
 
-export const createReview = async (
-  createReviewDto: CreateReviewDto,
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<createReviewResponse> => {
-  const getHeaders = (
-    h?: NonNullable<RequestInit["headers"]>,
-  ): Record<string, string | readonly string[]> => {
+
+
+
+  return `/v1/reviews`
+}
+
+export const createReview = async (createReviewDto: CreateReviewDto, options?: Parameters<typeof apiFetch>[1]): Promise<createReviewResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Symbol.iterator in h) {
       return Object.fromEntries(
-        Array.from(
-          h as Iterable<Iterable<string>>,
-          (entry) => Array.from(entry) as [string, string],
-        ),
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<
-      string | readonly string[] | undefined
-    >(h)) {
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
       if (value !== undefined) headers[name] = value;
     }
     return headers;
   };
-  return apiFetch<createReviewResponse>(getCreateReviewUrl(), {
+return apiFetch<createReviewResponse>(getCreateReviewUrl(),
+  {
     ...options,
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...getHeaders(options?.headers),
-    },
-    body: JSON.stringify(createReviewDto),
-  });
-};
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(createReviewDto)
+  }
+);}
 
-export const getCreateReviewMutationKey = () => ["createReview"] as const;
 
-export const getCreateReviewMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createReview>>,
-    TError,
-    CreateReviewMutationVariables,
-    TContext
-  >;
-  request?: SecondParameter<typeof apiFetch>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof createReview>>,
-  TError,
-  CreateReviewMutationVariables,
-  TContext
-> => {
-  const mutationKey = getCreateReviewMutationKey();
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof createReview>>,
-    CreateReviewMutationVariables
-  > = (props) => {
-    const { data } = props ?? {};
 
-    return createReview(data, requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
+export const getCreateReviewMutationKey = () => ['createReview'] as const;
 
-export type CreateReviewMutationResult = NonNullable<
-  Awaited<ReturnType<typeof createReview>>
->;
-export type CreateReviewMutationBody = CreateReviewDto;
-export type CreateReviewMutationError = unknown;
-export type CreateReviewMutationVariables = { data: CreateReviewDto };
+export const getCreateReviewMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createReview>>, TError,CreateReviewMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createReview>>, TError,CreateReviewMutationVariables, TContext> => {
 
-export const useCreateReview = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof createReview>>,
-      TError,
-      CreateReviewMutationVariables,
-      TContext
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof createReview>>,
-  TError,
-  CreateReviewMutationVariables,
-  TContext
-> => {
-  return useMutation(getCreateReviewMutationOptions(options), queryClient);
-};
+const mutationKey = getCreateReviewMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createReview>>, CreateReviewMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  createReview(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateReviewMutationResult = NonNullable<Awaited<ReturnType<typeof createReview>>>
+    export type CreateReviewMutationBody = CreateReviewDto
+    export type CreateReviewMutationError = unknown
+    export type CreateReviewMutationVariables = {data: CreateReviewDto}
+
+    export const useCreateReview = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createReview>>, TError,CreateReviewMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createReview>>,
+        TError,
+        CreateReviewMutationVariables,
+        TContext
+      > => {
+      return useMutation(getCreateReviewMutationOptions(options), queryClient);
+    }

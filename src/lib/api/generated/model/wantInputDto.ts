@@ -4,19 +4,19 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { Priority } from "./priority";
+import type { Priority } from './priority';
 
 export interface WantInputDto {
   skillId: string;
   /**
-   * @minimum 1
-   * @maximum 5
-   */
+     * @minimum 1
+     * @maximum 5
+     */
   currentLevel: number;
   /**
-   * @minimum 1
-   * @maximum 5
-   */
+     * @minimum 1
+     * @maximum 5
+     */
   goalLevel: number;
   priority: Priority;
 }

@@ -4,9 +4,9 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { SitemapLocalPageDto } from "./sitemapLocalPageDto";
-import type { SitemapSkillDto } from "./sitemapSkillDto";
-import type { SitemapUserDto } from "./sitemapUserDto";
+import type { SitemapLocalPageDto } from './sitemapLocalPageDto';
+import type { SitemapSkillDto } from './sitemapSkillDto';
+import type { SitemapUserDto } from './sitemapUserDto';
 
 export interface PublicSitemapDto {
   skills: SitemapSkillDto[];

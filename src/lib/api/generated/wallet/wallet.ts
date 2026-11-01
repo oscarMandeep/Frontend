@@ -4,7 +4,9 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import { useQuery } from "@tanstack/react-query";
+import {
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -14,24 +16,27 @@ import type {
   QueryKey,
   UndefinedInitialDataOptions,
   UseQueryOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+  UseQueryResult
+} from '@tanstack/react-query';
 
-import type { GetWalletParams, WalletDto } from "../model";
+import type {
+  GetWalletParams,
+  WalletDto
+} from '../model';
 
-import { apiFetch } from "../../fetcher";
+import { apiFetch } from '../../fetcher';
+
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-const withQueryKey = <T extends object, K>(
-  query: T,
-  queryKey: K,
-): T & { queryKey: K } => {
+
+
+const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKey: K } => {
   const result = { queryKey } as T & { queryKey: K };
   for (const key of Object.keys(query)) {
     // The explicit queryKey always wins, matching the previous
     // `{ ...query, queryKey }` spread where it was set last.
-    if (key === "queryKey") continue;
+    if (key === 'queryKey') continue;
     Object.defineProperty(result, key, {
       enumerable: true,
       configurable: true,
@@ -42,160 +47,115 @@ const withQueryKey = <T extends object, K>(
 };
 
 export type getWalletResponse200 = {
-  data: WalletDto;
-  status: 200;
-};
+  data: WalletDto
+  status: 200
+}
 
-export type getWalletResponseSuccess = getWalletResponse200 & {
+export type getWalletResponseSuccess = (getWalletResponse200) & {
   headers: Headers;
 };
-export type getWalletResponse = getWalletResponseSuccess;
+;
 
-export const getGetWalletUrl = (params?: GetWalletParams) => {
+export type getWalletResponse = (getWalletResponseSuccess)
+
+export const getGetWalletUrl = (params?: GetWalletParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
+      normalizedParams.append(key, value === null ? 'null' : String(value))
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/v1/wallet?${stringifiedParams}`
-    : `/v1/wallet`;
-};
+  return stringifiedParams.length > 0 ? `/v1/wallet?${stringifiedParams}` : `/v1/wallet`
+}
 
-export const getWallet = async (
-  params?: GetWalletParams,
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<getWalletResponse> => {
-  return apiFetch<getWalletResponse>(getGetWalletUrl(params), {
+export const getWallet = async (params?: GetWalletParams, options?: Parameters<typeof apiFetch>[1]): Promise<getWalletResponse> => {
+
+  return apiFetch<getWalletResponse>(getGetWalletUrl(params),
+  {
     ...options,
-    method: "GET",
-  });
-};
+    method: 'GET'
 
-export const getGetWalletQueryKey = (params?: GetWalletParams) => {
-  return [`/v1/wallet`, ...(params ? [params] : [])] as const;
-};
 
-export const getGetWalletQueryOptions = <
-  TData = Awaited<ReturnType<typeof getWallet>>,
-  TError = unknown,
->(
-  params?: GetWalletParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getWallet>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
+  }
+);}
+
+
+
+
+
+export const getGetWalletQueryKey = (params?: GetWalletParams,) => {
+    return [
+    `/v1/wallet`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetWalletQueryOptions = <TData = Awaited<ReturnType<typeof getWallet>>, TError = unknown>(params?: GetWalletParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWallet>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetWalletQueryKey(params);
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getWallet>>> = ({
-    signal,
-  }) => getWallet(params, { signal, ...requestOptions });
+  const queryKey =  queryOptions?.queryKey ?? getGetWalletQueryKey(params);
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getWallet>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
 
-export type GetWalletQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getWallet>>
->;
-export type GetWalletQueryError = unknown;
 
-export function useGetWallet<
-  TData = Awaited<ReturnType<typeof getWallet>>,
-  TError = unknown,
->(
-  params: undefined | GetWalletParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getWallet>>, TError, TData>
-    > &
-      Pick<
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getWallet>>> = ({ signal }) => getWallet(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getWallet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetWalletQueryResult = NonNullable<Awaited<ReturnType<typeof getWallet>>>
+export type GetWalletQueryError = unknown
+
+
+export function useGetWallet<TData = Awaited<ReturnType<typeof getWallet>>, TError = unknown>(
+ params: undefined |  GetWalletParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWallet>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getWallet>>,
           TError,
           Awaited<ReturnType<typeof getWallet>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useGetWallet<
-  TData = Awaited<ReturnType<typeof getWallet>>,
-  TError = unknown,
->(
-  params?: GetWalletParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getWallet>>, TError, TData>
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetWallet<TData = Awaited<ReturnType<typeof getWallet>>, TError = unknown>(
+ params?: GetWalletParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWallet>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getWallet>>,
           TError,
           Awaited<ReturnType<typeof getWallet>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useGetWallet<
-  TData = Awaited<ReturnType<typeof getWallet>>,
-  TError = unknown,
->(
-  params?: GetWalletParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getWallet>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetWallet<TData = Awaited<ReturnType<typeof getWallet>>, TError = unknown>(
+ params?: GetWalletParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWallet>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetWallet<
-  TData = Awaited<ReturnType<typeof getWallet>>,
-  TError = unknown,
->(
-  params?: GetWalletParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getWallet>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof apiFetch>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getGetWalletQueryOptions(params, options);
+export function useGetWallet<TData = Awaited<ReturnType<typeof getWallet>>, TError = unknown>(
+ params?: GetWalletParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWallet>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getGetWalletQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
+
+
+
+
+
+

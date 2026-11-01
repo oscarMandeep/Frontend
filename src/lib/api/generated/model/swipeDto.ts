@@ -4,7 +4,7 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { SwipeAction } from "./swipeAction";
+import type { SwipeAction } from './swipeAction';
 
 export interface SwipeDto {
   targetId: string;

@@ -5,10 +5,11 @@
  * OpenAPI spec version: 1
  */
 
-export type Mode = (typeof Mode)[keyof typeof Mode];
+export type Mode = typeof Mode[keyof typeof Mode];
+
 
 export const Mode = {
-  ONLINE: "ONLINE",
-  IN_PERSON: "IN_PERSON",
-  BOTH: "BOTH",
+  ONLINE: 'ONLINE',
+  IN_PERSON: 'IN_PERSON',
+  BOTH: 'BOTH',
 } as const;

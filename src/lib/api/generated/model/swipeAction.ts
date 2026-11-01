@@ -5,10 +5,11 @@
  * OpenAPI spec version: 1
  */
 
-export type SwipeAction = (typeof SwipeAction)[keyof typeof SwipeAction];
+export type SwipeAction = typeof SwipeAction[keyof typeof SwipeAction];
+
 
 export const SwipeAction = {
-  LIKE: "LIKE",
-  PASS: "PASS",
-  SUPER: "SUPER",
+  LIKE: 'LIKE',
+  PASS: 'PASS',
+  SUPER: 'SUPER',
 } as const;
