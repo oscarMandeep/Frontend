@@ -19,6 +19,11 @@ export function proxy(req: NextRequest) {
   if (isApp && !hasSession) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
+  // Already signed in: skip the front door.
+  const path = req.nextUrl.pathname;
+  if (hasSession && (path === "/" || path === "/login")) {
+    return NextResponse.redirect(new URL("/discover", req.url));
+  }
   return NextResponse.next();
 }
 
