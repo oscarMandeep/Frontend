@@ -60,16 +60,40 @@ export function ActionBar({
 }) {
   return (
     <div className="flex items-center justify-center gap-4 sm:gap-5">
-      <RoundButton label="Undo last pass (Z)" size="sm" color="rewind" onClick={onRewind} disabled={!canRewind || disabled}>
+      <RoundButton
+        label="Undo last pass (Z)"
+        size="sm"
+        color="rewind"
+        onClick={onRewind}
+        disabled={!canRewind || disabled}
+      >
         <RotateCcw className="size-5" strokeWidth={3} />
       </RoundButton>
-      <RoundButton label="Pass (←)" size="lg" color="nope" onClick={onNope} disabled={disabled}>
+      <RoundButton
+        label="Pass (←)"
+        size="lg"
+        color="nope"
+        onClick={onNope}
+        disabled={disabled}
+      >
         <X className="size-8" strokeWidth={3.5} />
       </RoundButton>
-      <RoundButton label="Super swap (↑)" size="sm" color="super" onClick={onSuper} disabled={disabled}>
+      <RoundButton
+        label="Super swap (↑)"
+        size="sm"
+        color="super"
+        onClick={onSuper}
+        disabled={disabled}
+      >
         <Star className="size-5" strokeWidth={3} />
       </RoundButton>
-      <RoundButton label="Interested (→)" size="lg" color="like" onClick={onLike} disabled={disabled}>
+      <RoundButton
+        label="Interested (→)"
+        size="lg"
+        color="like"
+        onClick={onLike}
+        disabled={disabled}
+      >
         <Heart className="size-8" strokeWidth={3.5} />
       </RoundButton>
     </div>

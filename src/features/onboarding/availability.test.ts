@@ -24,7 +24,9 @@ describe("cellsToSlots", () => {
   });
 
   it("handles the last hour of the day", () => {
-    expect(cellsToSlots(["0:23"])).toEqual([{ dayOfWeek: 0, startMin: 1380, endMin: 1440 }]);
+    expect(cellsToSlots(["0:23"])).toEqual([
+      { dayOfWeek: 0, startMin: 1380, endMin: 1440 },
+    ]);
   });
 });
 
@@ -38,8 +40,8 @@ describe("slotsToCells", () => {
   });
 
   it("rounds odd slots outwards to whole hours", () => {
-    expect(slotsToCells([{ dayOfWeek: 2, startMin: 570, endMin: 650 }]).sort()).toEqual(
-      [cellKey(2, 9), cellKey(2, 10)].sort(),
-    );
+    expect(
+      slotsToCells([{ dayOfWeek: 2, startMin: 570, endMin: 650 }]).sort(),
+    ).toEqual([cellKey(2, 9), cellKey(2, 10)].sort());
   });
 });

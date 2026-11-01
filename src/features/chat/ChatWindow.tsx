@@ -16,6 +16,7 @@ import { useGetMe } from "@/lib/api/generated/me/me";
 import { useGetMatch } from "@/lib/api/generated/matches/matches";
 import { clock, dayLabel } from "@/lib/time";
 import { cn } from "@/lib/utils";
+import { SlotPicker } from "@/features/sessions/SlotPicker";
 import { useChat, type ChatItem } from "./useChat";
 
 function TypingDots() {
@@ -99,6 +100,7 @@ export function ChatWindow({ matchId }: { matchId: string }) {
   const stickToBottom = useRef(true);
   const prevHeight = useRef(0);
   const [draft, setDraft] = useState("");
+  const [scheduling, setScheduling] = useState(false);
 
   // Older messages: load when the top sentinel scrolls into view.
   const { hasMore, loadingMore, loadMore } = chat;
@@ -203,13 +205,15 @@ export function ChatWindow({ matchId }: { matchId: string }) {
         ) : (
           <div className="flex-1" />
         )}
-        <Link
-          href={`/sessions?match=${matchId}`}
-          className="inline-flex h-10 items-center gap-1.5 rounded-full border border-border px-4 text-sm font-bold hover:bg-muted"
+        <button
+          type="button"
+          disabled={!match || !myId || closed}
+          onClick={() => setScheduling(true)}
+          className="inline-flex h-10 items-center gap-1.5 rounded-full border border-border px-4 text-sm font-bold hover:bg-muted disabled:opacity-50"
         >
           <CalendarPlus className="size-4 text-brand" />
           <span className="hidden sm:inline">Schedule</span>
-        </Link>
+        </button>
       </header>
 
       <div
@@ -311,6 +315,14 @@ export function ChatWindow({ matchId }: { matchId: string }) {
             <SendHorizontal className="size-5" />
           </button>
         </form>
+      )}
+      {match && myId && (
+        <SlotPicker
+          match={match}
+          myId={myId}
+          open={scheduling}
+          onOpenChange={setScheduling}
+        />
       )}
     </div>
   );

@@ -92,7 +92,9 @@ export function AvailabilityGrid({
         ))}
         {HOURS.map((h) => (
           <div key={h} className="contents">
-            <div className="pr-1 text-right text-[11px] leading-7 text-muted-foreground">{hourLabel(h)}</div>
+            <div className="pr-1 text-right text-[11px] leading-7 text-muted-foreground">
+              {hourLabel(h)}
+            </div>
             {DAYS.map((d) => {
               const key = cellKey(d.day, h);
               const on = selected.has(key);

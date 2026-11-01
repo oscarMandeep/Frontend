@@ -1,7 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { motion, useMotionValue, useReducedMotion, useTransform, type PanInfo } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useTransform,
+  type PanInfo,
+} from "framer-motion";
 import { ArrowLeftRight, Coins, Info, MapPin, Star, X } from "lucide-react";
 import { MatchRing } from "@/components/brand/MatchRing";
 import { SkillChip } from "@/components/brand/SkillChip";
@@ -32,7 +38,12 @@ export const cardVariants = {
   exit: (dir: SwipeDirection) =>
     dir === "up"
       ? { y: -900, opacity: 0, transition: { duration: 0.35 } }
-      : { x: dir === "right" ? 700 : -700, rotate: dir === "right" ? 18 : -18, opacity: 0, transition: { duration: 0.3 } },
+      : {
+          x: dir === "right" ? 700 : -700,
+          rotate: dir === "right" ? 18 : -18,
+          opacity: 0,
+          transition: { duration: 0.3 },
+        },
 };
 
 function Stars({ value }: { value: number }) {
@@ -58,14 +69,23 @@ export function SwipeCard({
   const reduce = useReducedMotion();
   const [details, setDetails] = useState(false);
   const x = useMotionValue(0);
-  const rotate = useTransform(x, [-220, 0, 220], reduce ? [0, 0, 0] : [-14, 0, 14]);
+  const rotate = useTransform(
+    x,
+    [-220, 0, 220],
+    reduce ? [0, 0, 0] : [-14, 0, 14],
+  );
   const likeOpacity = useTransform(x, [20, 120], [0, 1]);
   const nopeOpacity = useTransform(x, [-120, -20], [1, 0]);
   const { user } = card;
 
   function onDragEnd(_: unknown, info: PanInfo) {
-    if (info.offset.x > SWIPE_DISTANCE || info.velocity.x > SWIPE_VELOCITY) onSwipe("right");
-    else if (info.offset.x < -SWIPE_DISTANCE || info.velocity.x < -SWIPE_VELOCITY) onSwipe("left");
+    if (info.offset.x > SWIPE_DISTANCE || info.velocity.x > SWIPE_VELOCITY)
+      onSwipe("right");
+    else if (
+      info.offset.x < -SWIPE_DISTANCE ||
+      info.velocity.x < -SWIPE_VELOCITY
+    )
+      onSwipe("left");
   }
 
   return (
@@ -84,12 +104,19 @@ export function SwipeCard({
       className={cn(
         "absolute inset-0 overflow-hidden rounded-3xl bg-gradient-to-br shadow-xl ring-1 ring-black/5",
         avatarGradient(user.id),
-        isTop ? "cursor-grab touch-pan-y active:cursor-grabbing" : "pointer-events-none",
+        isTop
+          ? "cursor-grab touch-pan-y active:cursor-grabbing"
+          : "pointer-events-none",
       )}
     >
       {user.avatarUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={user.avatarUrl} alt="" draggable={false} className="absolute inset-0 size-full object-cover" />
+        <img
+          src={user.avatarUrl}
+          alt=""
+          draggable={false}
+          className="absolute inset-0 size-full object-cover"
+        />
       ) : (
         <span
           aria-hidden="true"
@@ -133,7 +160,9 @@ export function SwipeCard({
             <h2 className="text-[28px] leading-tight font-extrabold [text-shadow:0_2px_8px_rgb(0_0_0/0.45)]">
               {user.name}
               {user.isNew && (
-                <span className="ml-2 align-middle rounded-full bg-white/20 px-2 py-0.5 text-xs font-bold backdrop-blur">New</span>
+                <span className="ml-2 align-middle rounded-full bg-white/20 px-2 py-0.5 text-xs font-bold backdrop-blur">
+                  New
+                </span>
               )}
             </h2>
             <button
@@ -166,7 +195,9 @@ export function SwipeCard({
               They learn <b>{card.teachSkill.name}</b> from you
             </span>
           ) : (
-            <span className="w-fit rounded-full bg-white/15 px-3 py-1 backdrop-blur">Pay with 1 credit per hour</span>
+            <span className="w-fit rounded-full bg-white/15 px-3 py-1 backdrop-blur">
+              Pay with 1 credit per hour
+            </span>
           )}
         </div>
       </div>
@@ -194,12 +225,17 @@ export function SwipeCard({
             </button>
           </div>
 
-          {user.bio && <p className="text-[15px] text-secondary-foreground">{user.bio}</p>}
+          {user.bio && (
+            <p className="text-[15px] text-secondary-foreground">{user.bio}</p>
+          )}
 
           {card.reasons.length > 0 && (
             <ul className="flex flex-col gap-1.5">
               {card.reasons.map((r) => (
-                <li key={r} className="rounded-xl bg-accent px-3 py-2 text-sm font-semibold text-accent-foreground">
+                <li
+                  key={r}
+                  className="rounded-xl bg-accent px-3 py-2 text-sm font-semibold text-accent-foreground"
+                >
                   {r}
                 </li>
               ))}
@@ -207,7 +243,9 @@ export function SwipeCard({
           )}
 
           <section>
-            <h3 className="mb-2 text-sm font-bold text-muted-foreground">Can teach</h3>
+            <h3 className="mb-2 text-sm font-bold text-muted-foreground">
+              Can teach
+            </h3>
             <div className="flex flex-wrap gap-2">
               {user.haves.map((h) => (
                 <SkillChip key={h.skill.id} category={h.skill.category}>
@@ -217,7 +255,9 @@ export function SwipeCard({
             </div>
           </section>
           <section>
-            <h3 className="mb-2 text-sm font-bold text-muted-foreground">Wants to learn</h3>
+            <h3 className="mb-2 text-sm font-bold text-muted-foreground">
+              Wants to learn
+            </h3>
             <div className="flex flex-wrap gap-2">
               {user.wants.map((w) => (
                 <SkillChip key={w.skill.id} category={w.skill.category}>
@@ -228,22 +268,35 @@ export function SwipeCard({
           </section>
 
           <section>
-            <h3 className="mb-2 text-sm font-bold text-muted-foreground">Why {card.score}%</h3>
+            <h3 className="mb-2 text-sm font-bold text-muted-foreground">
+              Why {card.score}%
+            </h3>
             <dl className="flex flex-col gap-2">
-              {(Object.keys(BREAKDOWN_LABELS) as (keyof MatchBreakdownDto)[]).map((k) => (
+              {(
+                Object.keys(BREAKDOWN_LABELS) as (keyof MatchBreakdownDto)[]
+              ).map((k) => (
                 <div key={k}>
                   <div className="flex justify-between text-xs font-semibold">
                     <dt>{BREAKDOWN_LABELS[k]}</dt>
-                    <dd className="text-muted-foreground">{Math.round(card.breakdown[k] * 100)}%</dd>
+                    <dd className="text-muted-foreground">
+                      {Math.round(card.breakdown[k] * 100)}%
+                    </dd>
                   </div>
                   <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-border">
-                    <div className="bg-brand-gradient h-full" style={{ width: `${Math.round(card.breakdown[k] * 100)}%` }} />
+                    <div
+                      className="bg-brand-gradient h-full"
+                      style={{
+                        width: `${Math.round(card.breakdown[k] * 100)}%`,
+                      }}
+                    />
                   </div>
                 </div>
               ))}
             </dl>
           </section>
-          <p className="text-xs text-muted-foreground">Speaks {user.languages.join(", ")}</p>
+          <p className="text-xs text-muted-foreground">
+            Speaks {user.languages.join(", ")}
+          </p>
         </div>
       )}
     </motion.article>

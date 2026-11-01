@@ -28,35 +28,65 @@ export function MatchModal() {
         <motion.h2
           initial={{ scale: 0.4, opacity: 0, rotate: -8 }}
           animate={{ scale: 1, opacity: 1, rotate: -4 }}
-          transition={{ type: "spring", stiffness: 260, damping: 14, delay: 0.15 }}
+          transition={{
+            type: "spring",
+            stiffness: 260,
+            damping: 14,
+            delay: 0.15,
+          }}
           className="text-brand-gradient text-6xl leading-none font-extrabold italic"
         >
           It&apos;s a match!
         </motion.h2>
 
         <div className="flex items-center justify-center">
-          <motion.div initial={{ x: -140, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ type: "spring", damping: 16 }}>
+          <motion.div
+            initial={{ x: -140, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ type: "spring", damping: 16 }}
+          >
             <span className="bg-brand-gradient block rounded-full p-1">
-              <UserAvatar id={me.id} name={me.name} src={me.avatarUrl} className="size-28 border-4 border-black" textClassName="text-3xl" />
+              <UserAvatar
+                id={me.id}
+                name={me.name}
+                src={me.avatarUrl}
+                className="size-28 border-4 border-black"
+                textClassName="text-3xl"
+              />
             </span>
           </motion.div>
-          <motion.div initial={{ x: 140, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ type: "spring", damping: 16 }} className="-ml-4">
+          <motion.div
+            initial={{ x: 140, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ type: "spring", damping: 16 }}
+            className="-ml-4"
+          >
             <span className="bg-brand-gradient block rounded-full p-1">
-              <UserAvatar id={other.id} name={other.name} src={other.avatarUrl} className="size-28 border-4 border-black" textClassName="text-3xl" />
+              <UserAvatar
+                id={other.id}
+                name={other.name}
+                src={other.avatarUrl}
+                className="size-28 border-4 border-black"
+                textClassName="text-3xl"
+              />
             </span>
           </motion.div>
         </div>
 
         <div>
-          <p className="text-lg font-bold">You and {other.name.split(" ")[0]} matched</p>
+          <p className="text-lg font-bold">
+            You and {other.name.split(" ")[0]} matched
+          </p>
           <p className="mt-2 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-[15px] font-semibold">
             {match.teachSkill ? (
               <>
-                {match.teachSkill.name} <ArrowLeftRight className="size-4" /> {match.learnSkill.name}
+                {match.teachSkill.name} <ArrowLeftRight className="size-4" />{" "}
+                {match.learnSkill.name}
               </>
             ) : (
               <>
-                <Coins className="size-4 text-action-rewind" /> You learn {match.learnSkill.name} with credits
+                <Coins className="size-4 text-action-rewind" /> You learn{" "}
+                {match.learnSkill.name} with credits
               </>
             )}
           </p>

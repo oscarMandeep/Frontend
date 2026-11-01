@@ -6,7 +6,16 @@ import { useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch, type PathValue } from "react-hook-form";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, Check, Globe2, Loader2, MapPin, Plus, Users, X } from "lucide-react";
+import {
+  ArrowLeft,
+  Check,
+  Globe2,
+  Loader2,
+  MapPin,
+  Plus,
+  Users,
+  X,
+} from "lucide-react";
 import { toast } from "sonner";
 import { GradientButton } from "@/components/brand/GradientButton";
 import { Logo } from "@/components/brand/Logo";
@@ -35,15 +44,43 @@ import {
 } from "./schema";
 import { SkillPicker } from "./SkillPicker";
 
-const SUGGESTED_LANGUAGES = ["English", "Hindi", "Spanish", "French", "German", "Tamil", "Bengali", "Japanese"];
+const SUGGESTED_LANGUAGES = [
+  "English",
+  "Hindi",
+  "Spanish",
+  "French",
+  "German",
+  "Tamil",
+  "Bengali",
+  "Japanese",
+];
 
 const MODE_CARDS = [
-  { value: "ONLINE", title: "Online", text: "Video calls from anywhere", icon: Globe2 },
-  { value: "IN_PERSON", title: "In person", text: "Meet people in your city", icon: MapPin },
+  {
+    value: "ONLINE",
+    title: "Online",
+    text: "Video calls from anywhere",
+    icon: Globe2,
+  },
+  {
+    value: "IN_PERSON",
+    title: "In person",
+    text: "Meet people in your city",
+    icon: MapPin,
+  },
   { value: "BOTH", title: "Both", text: "Whatever works", icon: Users },
-] as const satisfies readonly { value: (typeof MODES)[number]; title: string; text: string; icon: unknown }[];
+] as const satisfies readonly {
+  value: (typeof MODES)[number];
+  title: string;
+  text: string;
+  icon: unknown;
+}[];
 
-const PRIORITY_LABEL = { HIGH: "Really want it", MEDIUM: "Would like it", LOW: "Just curious" } as const;
+const PRIORITY_LABEL = {
+  HIGH: "Really want it",
+  MEDIUM: "Would like it",
+  LOW: "Just curious",
+} as const;
 
 /** Loads the profile first, so the form can start from what was already saved. */
 export function OnboardingFlow() {
@@ -102,21 +139,49 @@ function OnboardingForm({ profile }: { profile: MeDto }) {
   });
   const { setValue, trigger, control, formState } = form;
   const values = useWatch({ control }) as OnboardingValues;
-  const { haves = [], wants = [], cells = [], mode = "BOTH", languages = [], city = "" } = values;
+  const {
+    haves = [],
+    wants = [],
+    cells = [],
+    mode = "BOTH",
+    languages = [],
+    city = "",
+  } = values;
 
-  const set = <K extends keyof OnboardingValues>(key: K, value: OnboardingValues[K]) =>
-    setValue(key, value as PathValue<OnboardingValues, K>, { shouldValidate: true, shouldDirty: true });
+  const set = <K extends keyof OnboardingValues>(
+    key: K,
+    value: OnboardingValues[K],
+  ) =>
+    setValue(key, value as PathValue<OnboardingValues, K>, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
 
   const addHave = (s: SkillRefDto) =>
-    set("haves", [...haves, { skillId: s.id, name: s.name, category: s.category, level: 3 }]);
+    set("haves", [
+      ...haves,
+      { skillId: s.id, name: s.name, category: s.category, level: 3 },
+    ]);
   const addWant = (s: SkillRefDto) =>
     set("wants", [
       ...wants,
-      { skillId: s.id, name: s.name, category: s.category, currentLevel: 1, goalLevel: 3, priority: "MEDIUM" },
+      {
+        skillId: s.id,
+        name: s.name,
+        category: s.category,
+        currentLevel: 1,
+        goalLevel: 3,
+        priority: "MEDIUM",
+      },
     ]);
 
   const toggleLanguage = (lang: string) =>
-    set("languages", languages.includes(lang) ? languages.filter((l) => l !== lang) : [...languages, lang]);
+    set(
+      "languages",
+      languages.includes(lang)
+        ? languages.filter((l) => l !== lang)
+        : [...languages, lang],
+    );
 
   const stepError = (): string | undefined => {
     for (const f of STEP_FIELDS[step]) {
@@ -126,7 +191,11 @@ function OnboardingForm({ profile }: { profile: MeDto }) {
         if (message) return message;
         // array fields report the first failing item
         const first = Array.isArray(err) ? err.find(Boolean) : undefined;
-        const nested = first && Object.values(first as object).find((v) => (v as { message?: string })?.message);
+        const nested =
+          first &&
+          Object.values(first as object).find(
+            (v) => (v as { message?: string })?.message,
+          );
         return (nested as { message?: string } | undefined)?.message;
       }
     }
@@ -164,7 +233,11 @@ function OnboardingForm({ profile }: { profile: MeDto }) {
       toast.success("You are all set. Let's find your first swap!");
       router.push("/discover");
     } catch (err) {
-      const details = isApiError(err) ? Object.values(err.error.details ?? {}).flat().join(" ") : "";
+      const details = isApiError(err)
+        ? Object.values(err.error.details ?? {})
+            .flat()
+            .join(" ")
+        : "";
       toast.error(details || "Could not save. Please try again.");
       setSaving(false);
     }
@@ -182,8 +255,16 @@ function OnboardingForm({ profile }: { profile: MeDto }) {
           Step {step + 1} of {STEP_TITLES.length}
         </span>
       </header>
-      <div className="h-1.5 overflow-hidden rounded-full bg-border" role="progressbar" aria-valuenow={step + 1} aria-valuemax={4}>
-        <motion.div className="bg-brand-gradient h-full" animate={{ width: `${progress}%` }} />
+      <div
+        className="h-1.5 overflow-hidden rounded-full bg-border"
+        role="progressbar"
+        aria-valuenow={step + 1}
+        aria-valuemax={4}
+      >
+        <motion.div
+          className="bg-brand-gradient h-full"
+          animate={{ width: `${progress}%` }}
+        />
       </div>
 
       <AnimatePresence mode="wait">
@@ -199,17 +280,33 @@ function OnboardingForm({ profile }: { profile: MeDto }) {
 
           {step === 0 && (
             <>
-              <p className="-mt-3 text-muted-foreground">Add skills you could teach a beginner, and how good you are.</p>
-              <SkillPicker onPick={addHave} excludeIds={[...haves.map((h) => h.skillId), ...wants.map((w) => w.skillId)]} />
+              <p className="-mt-3 text-muted-foreground">
+                Add skills you could teach a beginner, and how good you are.
+              </p>
+              <SkillPicker
+                onPick={addHave}
+                excludeIds={[
+                  ...haves.map((h) => h.skillId),
+                  ...wants.map((w) => w.skillId),
+                ]}
+              />
               <ul className="flex flex-col gap-3">
                 {haves.map((h, i) => (
-                  <li key={h.skillId} className="rounded-2xl border border-border bg-card p-4">
+                  <li
+                    key={h.skillId}
+                    className="rounded-2xl border border-border bg-card p-4"
+                  >
                     <div className="mb-3 flex items-center justify-between">
                       <SkillChip category={h.category}>{h.name}</SkillChip>
                       <button
                         type="button"
                         aria-label={`Remove ${h.name}`}
-                        onClick={() => set("haves", haves.filter((x) => x.skillId !== h.skillId))}
+                        onClick={() =>
+                          set(
+                            "haves",
+                            haves.filter((x) => x.skillId !== h.skillId),
+                          )
+                        }
                         className="rounded-full p-1 text-muted-foreground hover:bg-muted"
                       >
                         <X className="size-4" />
@@ -218,7 +315,12 @@ function OnboardingForm({ profile }: { profile: MeDto }) {
                     <LevelPicker
                       label="your level"
                       value={h.level}
-                      onChange={(level) => set("haves", haves.map((x, j) => (j === i ? { ...x, level } : x)))}
+                      onChange={(level) =>
+                        set(
+                          "haves",
+                          haves.map((x, j) => (j === i ? { ...x, level } : x)),
+                        )
+                      }
                     />
                   </li>
                 ))}
@@ -228,17 +330,34 @@ function OnboardingForm({ profile }: { profile: MeDto }) {
 
           {step === 1 && (
             <>
-              <p className="-mt-3 text-muted-foreground">Pick what you would love to learn, and the level you are aiming for.</p>
-              <SkillPicker onPick={addWant} excludeIds={[...haves.map((h) => h.skillId), ...wants.map((w) => w.skillId)]} />
+              <p className="-mt-3 text-muted-foreground">
+                Pick what you would love to learn, and the level you are aiming
+                for.
+              </p>
+              <SkillPicker
+                onPick={addWant}
+                excludeIds={[
+                  ...haves.map((h) => h.skillId),
+                  ...wants.map((w) => w.skillId),
+                ]}
+              />
               <ul className="flex flex-col gap-3">
                 {wants.map((w, i) => (
-                  <li key={w.skillId} className="rounded-2xl border border-border bg-card p-4">
+                  <li
+                    key={w.skillId}
+                    className="rounded-2xl border border-border bg-card p-4"
+                  >
                     <div className="mb-3 flex items-center justify-between">
                       <SkillChip category={w.category}>{w.name}</SkillChip>
                       <button
                         type="button"
                         aria-label={`Remove ${w.name}`}
-                        onClick={() => set("wants", wants.filter((x) => x.skillId !== w.skillId))}
+                        onClick={() =>
+                          set(
+                            "wants",
+                            wants.filter((x) => x.skillId !== w.skillId),
+                          )
+                        }
                         className="rounded-full p-1 text-muted-foreground hover:bg-muted"
                       >
                         <X className="size-4" />
@@ -249,14 +368,42 @@ function OnboardingForm({ profile }: { profile: MeDto }) {
                         label="where you are now"
                         value={w.currentLevel}
                         onChange={(currentLevel) =>
-                          set("wants", wants.map((x, j) => (j === i ? { ...x, currentLevel, goalLevel: Math.max(x.goalLevel, currentLevel) } : x)))
+                          set(
+                            "wants",
+                            wants.map((x, j) =>
+                              j === i
+                                ? {
+                                    ...x,
+                                    currentLevel,
+                                    goalLevel: Math.max(
+                                      x.goalLevel,
+                                      currentLevel,
+                                    ),
+                                  }
+                                : x,
+                            ),
+                          )
                         }
                       />
                       <LevelPicker
                         label="your goal"
                         value={w.goalLevel}
                         onChange={(goalLevel) =>
-                          set("wants", wants.map((x, j) => (j === i ? { ...x, goalLevel, currentLevel: Math.min(x.currentLevel, goalLevel) } : x)))
+                          set(
+                            "wants",
+                            wants.map((x, j) =>
+                              j === i
+                                ? {
+                                    ...x,
+                                    goalLevel,
+                                    currentLevel: Math.min(
+                                      x.currentLevel,
+                                      goalLevel,
+                                    ),
+                                  }
+                                : x,
+                            ),
+                          )
                         }
                       />
                     </div>
@@ -266,7 +413,14 @@ function OnboardingForm({ profile }: { profile: MeDto }) {
                           key={p}
                           type="button"
                           aria-pressed={w.priority === p}
-                          onClick={() => set("wants", wants.map((x, j) => (j === i ? { ...x, priority: p } : x)))}
+                          onClick={() =>
+                            set(
+                              "wants",
+                              wants.map((x, j) =>
+                                j === i ? { ...x, priority: p } : x,
+                              ),
+                            )
+                          }
                           className={cn(
                             "rounded-full border px-3 py-1 text-[13px] font-semibold transition-colors",
                             w.priority === p
@@ -287,10 +441,16 @@ function OnboardingForm({ profile }: { profile: MeDto }) {
           {step === 2 && (
             <>
               <p className="-mt-3 text-muted-foreground">
-                Paint the hours you are usually free (in your local time). Drag across cells. We only suggest times when both of you are free.
+                Paint the hours you are usually free (in your local time). Drag
+                across cells. We only suggest times when both of you are free.
               </p>
-              <AvailabilityGrid cells={cells} onChange={(c) => set("cells", c)} />
-              <p className="text-sm text-muted-foreground">{cells.length} free hours per week selected</p>
+              <AvailabilityGrid
+                cells={cells}
+                onChange={(c) => set("cells", c)}
+              />
+              <p className="text-sm text-muted-foreground">
+                {cells.length} free hours per week selected
+              </p>
             </>
           )}
 
@@ -305,12 +465,16 @@ function OnboardingForm({ profile }: { profile: MeDto }) {
                     onClick={() => set("mode", m.value)}
                     className={cn(
                       "flex flex-col items-start gap-1 rounded-2xl border p-4 text-left transition",
-                      mode === m.value ? "border-brand bg-accent ring-2 ring-brand/30" : "border-border bg-card hover:bg-muted",
+                      mode === m.value
+                        ? "border-brand bg-accent ring-2 ring-brand/30"
+                        : "border-border bg-card hover:bg-muted",
                     )}
                   >
                     <m.icon className="size-6 text-brand" />
                     <span className="mt-1 font-bold">{m.title}</span>
-                    <span className="text-sm text-muted-foreground">{m.text}</span>
+                    <span className="text-sm text-muted-foreground">
+                      {m.text}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -330,30 +494,35 @@ function OnboardingForm({ profile }: { profile: MeDto }) {
               <div className="flex flex-col gap-2">
                 <span className="font-semibold">Languages you can chat in</span>
                 <div className="flex flex-wrap gap-2">
-                  {[...new Set([...SUGGESTED_LANGUAGES, ...languages])].map((l) => (
-                    <button
-                      key={l}
-                      type="button"
-                      aria-pressed={languages.includes(l)}
-                      onClick={() => toggleLanguage(l)}
-                      className={cn(
-                        "inline-flex items-center gap-1 rounded-full border px-3.5 py-1.5 text-sm font-semibold transition-colors",
-                        languages.includes(l)
-                          ? "bg-brand-gradient border-transparent text-white"
-                          : "border-border text-muted-foreground hover:bg-muted",
-                      )}
-                    >
-                      {languages.includes(l) && <Check className="size-3.5" />}
-                      {l}
-                    </button>
-                  ))}
+                  {[...new Set([...SUGGESTED_LANGUAGES, ...languages])].map(
+                    (l) => (
+                      <button
+                        key={l}
+                        type="button"
+                        aria-pressed={languages.includes(l)}
+                        onClick={() => toggleLanguage(l)}
+                        className={cn(
+                          "inline-flex items-center gap-1 rounded-full border px-3.5 py-1.5 text-sm font-semibold transition-colors",
+                          languages.includes(l)
+                            ? "bg-brand-gradient border-transparent text-white"
+                            : "border-border text-muted-foreground hover:bg-muted",
+                        )}
+                      >
+                        {languages.includes(l) && (
+                          <Check className="size-3.5" />
+                        )}
+                        {l}
+                      </button>
+                    ),
+                  )}
                 </div>
                 <form
                   className="flex gap-2"
                   onSubmit={(e) => {
                     e.preventDefault();
                     const t = langText.trim();
-                    if (t && !languages.includes(t)) set("languages", [...languages, t]);
+                    if (t && !languages.includes(t))
+                      set("languages", [...languages, t]);
                     setLangText("");
                   }}
                 >
@@ -364,7 +533,11 @@ function OnboardingForm({ profile }: { profile: MeDto }) {
                     aria-label="Add another language"
                     className="h-10 rounded-full px-4"
                   />
-                  <button type="submit" aria-label="Add language" className="grid size-10 shrink-0 place-items-center rounded-full border border-border hover:bg-muted">
+                  <button
+                    type="submit"
+                    aria-label="Add language"
+                    className="grid size-10 shrink-0 place-items-center rounded-full border border-border hover:bg-muted"
+                  >
                     <Plus className="size-4" />
                   </button>
                 </form>
@@ -373,7 +546,10 @@ function OnboardingForm({ profile }: { profile: MeDto }) {
           )}
 
           {error && (
-            <p role="alert" className="rounded-xl bg-destructive/10 px-4 py-2.5 text-sm font-semibold text-destructive">
+            <p
+              role="alert"
+              className="rounded-xl bg-destructive/10 px-4 py-2.5 text-sm font-semibold text-destructive"
+            >
               {error}
             </p>
           )}
@@ -391,7 +567,13 @@ function OnboardingForm({ profile }: { profile: MeDto }) {
             <ArrowLeft className="size-4" /> Back
           </button>
           <GradientButton onClick={next} disabled={saving} className="min-w-36">
-            {saving ? <Loader2 className="size-5 animate-spin" /> : last ? "Finish" : "Continue"}
+            {saving ? (
+              <Loader2 className="size-5 animate-spin" />
+            ) : last ? (
+              "Finish"
+            ) : (
+              "Continue"
+            )}
           </GradientButton>
         </div>
       </div>

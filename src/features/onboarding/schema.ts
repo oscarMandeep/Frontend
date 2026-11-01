@@ -1,6 +1,12 @@
 import { z } from "zod";
 
-export const LEVEL_LABELS = ["Beginner", "Basic", "Intermediate", "Advanced", "Expert"] as const;
+export const LEVEL_LABELS = [
+  "Beginner",
+  "Basic",
+  "Intermediate",
+  "Advanced",
+  "Expert",
+] as const;
 export const PRIORITIES = ["HIGH", "MEDIUM", "LOW"] as const;
 export const MODES = ["ONLINE", "IN_PERSON", "BOTH"] as const;
 
@@ -30,8 +36,14 @@ export const wantSchema = z
 /** Mirrors the API's rules (docs/04-api-contract.md); the API re-checks everything. */
 export const onboardingSchema = z
   .object({
-    haves: z.array(haveSchema).min(1, "Add at least one skill you can teach").max(20),
-    wants: z.array(wantSchema).min(1, "Add at least one skill you want to learn").max(20),
+    haves: z
+      .array(haveSchema)
+      .min(1, "Add at least one skill you can teach")
+      .max(20),
+    wants: z
+      .array(wantSchema)
+      .min(1, "Add at least one skill you want to learn")
+      .max(20),
     cells: z.array(z.string()).min(1, "Pick at least one time you are free"),
     mode: z.enum(MODES),
     languages: z

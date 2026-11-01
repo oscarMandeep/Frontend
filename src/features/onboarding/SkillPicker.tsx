@@ -24,9 +24,16 @@ export function SkillPicker({
   const [error, setError] = useState<string | null>(null);
   const q = useDebouncedValue(text.trim(), 250);
 
-  const search = useSearchSkills({ q, limit: 8 }, { query: { enabled: q.length >= 1 } });
-  const results = (search.data?.data ?? []).filter((s) => !excludeIds.includes(s.id));
-  const exact = results.some((s) => s.name.toLowerCase() === text.trim().toLowerCase());
+  const search = useSearchSkills(
+    { q, limit: 8 },
+    { query: { enabled: q.length >= 1 } },
+  );
+  const results = (search.data?.data ?? []).filter(
+    (s) => !excludeIds.includes(s.id),
+  );
+  const exact = results.some(
+    (s) => s.name.toLowerCase() === text.trim().toLowerCase(),
+  );
   const showCreate = text.trim().length >= 2 && !exact && !search.isFetching;
 
   function pick(skill: SkillRefDto) {
@@ -90,7 +97,11 @@ export function SkillPicker({
                 onClick={create}
                 className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left font-semibold text-brand hover:bg-accent disabled:opacity-60"
               >
-                {creating ? <Loader2 className="size-4 animate-spin" /> : <Plus className="size-4" />}
+                {creating ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <Plus className="size-4" />
+                )}
                 Create “{text.trim()}”
               </button>
             </li>

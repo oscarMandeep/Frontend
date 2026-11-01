@@ -29,7 +29,9 @@ export function LevelPicker({
               onClick={() => onChange(level)}
               className={cn(
                 "h-2.5 flex-1 rounded-full transition-colors",
-                active ? "bg-brand-gradient" : "bg-border hover:bg-muted-foreground/40",
+                active
+                  ? "bg-brand-gradient"
+                  : "bg-border hover:bg-muted-foreground/40",
               )}
             />
           );

@@ -15,7 +15,12 @@ export function cellsToSlots(cells: readonly string[]): Slot[] {
   const byDay = new Map<number, number[]>();
   for (const cell of new Set(cells)) {
     const [day, hour] = cell.split(":").map(Number);
-    if (Number.isInteger(day) && Number.isInteger(hour) && hour >= 0 && hour <= 23) {
+    if (
+      Number.isInteger(day) &&
+      Number.isInteger(hour) &&
+      hour >= 0 &&
+      hour <= 23
+    ) {
       byDay.set(day, [...(byDay.get(day) ?? []), hour]);
     }
   }
@@ -26,12 +31,20 @@ export function cellsToSlots(cells: readonly string[]): Slot[] {
     let prev = hours[0];
     for (const h of hours.slice(1)) {
       if (h !== prev + 1) {
-        slots.push({ dayOfWeek: day, startMin: start * 60, endMin: (prev + 1) * 60 });
+        slots.push({
+          dayOfWeek: day,
+          startMin: start * 60,
+          endMin: (prev + 1) * 60,
+        });
         start = h;
       }
       prev = h;
     }
-    slots.push({ dayOfWeek: day, startMin: start * 60, endMin: (prev + 1) * 60 });
+    slots.push({
+      dayOfWeek: day,
+      startMin: start * 60,
+      endMin: (prev + 1) * 60,
+    });
   }
   return slots;
 }
@@ -40,7 +53,11 @@ export function cellsToSlots(cells: readonly string[]): Slot[] {
 export function slotsToCells(slots: readonly Slot[]): string[] {
   const cells = new Set<string>();
   for (const s of slots) {
-    for (let h = Math.floor(s.startMin / 60); h < Math.ceil(s.endMin / 60); h++) {
+    for (
+      let h = Math.floor(s.startMin / 60);
+      h < Math.ceil(s.endMin / 60);
+      h++
+    ) {
       cells.add(cellKey(s.dayOfWeek, h));
     }
   }
