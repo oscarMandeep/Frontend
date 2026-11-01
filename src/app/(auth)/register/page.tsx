@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Check } from "lucide-react";
 import { AuthLayout } from "@/components/auth/AuthLayout";
-import { GoogleButton } from "@/components/auth/GoogleButton";
+import { RegisterForm } from "@/features/auth/RegisterForm";
 
 export const metadata: Metadata = {
   title: "Create your account — SkillSwap",
@@ -40,7 +40,9 @@ export default function RegisterPage() {
         ))}
       </ul>
 
-      <GoogleButton label="Sign up with Google" className="mt-8" />
+      <div className="mt-8">
+        <RegisterForm />
+      </div>
 
       <p className="mt-8 text-center text-sm text-muted-foreground">
         Already have an account?{" "}

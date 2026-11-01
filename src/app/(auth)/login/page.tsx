@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AuthLayout } from "@/components/auth/AuthLayout";
-import { GoogleButton } from "@/components/auth/GoogleButton";
+import { LoginForm } from "@/features/auth/LoginForm";
 
 export const metadata: Metadata = {
   title: "Log in — SkillSwap",
@@ -17,7 +17,9 @@ export default function LoginPage() {
         Log in to see your matches, messages and sessions.
       </p>
 
-      <GoogleButton className="mt-8" />
+      <div className="mt-8">
+        <LoginForm />
+      </div>
 
       <p className="mt-8 text-center text-sm text-muted-foreground">
         New to SkillSwap?{" "}
