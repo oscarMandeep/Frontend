@@ -39,7 +39,9 @@ export function StyleguideDemos() {
           <Button>Primary</Button>
           <Button variant="outline">Secondary</Button>
           <Button variant="destructive">Danger</Button>
-          <Button onClick={() => toast.success("Saved! (sonner toast)")}>Show toast</Button>
+          <Button onClick={() => toast.success("Saved! (sonner toast)")}>
+            Show toast
+          </Button>
         </CardContent>
       </Card>
 
@@ -84,7 +86,9 @@ export function StyleguideDemos() {
         <CardContent className="space-y-4">
           <div className="flex gap-3">
             <Dialog>
-              <DialogTrigger render={<Button variant="outline">Open dialog</Button>} />
+              <DialogTrigger
+                render={<Button variant="outline">Open dialog</Button>}
+              />
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>It&apos;s a match!</DialogTitle>
@@ -93,7 +97,9 @@ export function StyleguideDemos() {
               </DialogContent>
             </Dialog>
             <Sheet>
-              <SheetTrigger render={<Button variant="outline">Open sheet</Button>} />
+              <SheetTrigger
+                render={<Button variant="outline">Open sheet</Button>}
+              />
               <SheetContent>
                 <SheetHeader>
                   <SheetTitle>Filters</SheetTitle>

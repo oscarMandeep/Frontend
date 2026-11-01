@@ -30,10 +30,16 @@ export function MatchRing({
       style={{
         width: size,
         height: size,
-        filter: clamped >= 80 ? "drop-shadow(0 0 8px var(--brand-pink))" : undefined,
+        filter:
+          clamped >= 80 ? "drop-shadow(0 0 8px var(--brand-pink))" : undefined,
       }}
     >
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
+      <svg
+        width={size}
+        height={size}
+        viewBox={`0 0 ${size} ${size}`}
+        className="-rotate-90"
+      >
         <defs>
           <linearGradient id={id} x1="0" y1="1" x2="1" y2="0">
             <stop offset="0" style={{ stopColor: "var(--brand-pink)" }} />
@@ -62,9 +68,15 @@ export function MatchRing({
           transition={{ duration: reduceMotion ? 0 : 0.9, ease: "easeOut" }}
         />
       </svg>
-      <span className="absolute font-extrabold" style={{ fontSize: size * 0.3 }}>
+      <span
+        className="absolute font-extrabold"
+        style={{ fontSize: size * 0.3 }}
+      >
         {clamped}
-        <span className="text-muted-foreground" style={{ fontSize: size * 0.18 }}>
+        <span
+          className="text-muted-foreground"
+          style={{ fontSize: size * 0.18 }}
+        >
           %
         </span>
       </span>

@@ -4,7 +4,7 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { TopSwapDto } from './topSwapDto';
+import type { TopSwapDto } from "./topSwapDto";
 
 export interface PublicStatsDto {
   users: number;

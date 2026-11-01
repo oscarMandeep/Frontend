@@ -58,7 +58,9 @@ export function SignInPanel({ className }: { className?: string }) {
         body: JSON.stringify({ email }),
       });
       if (!res.ok) throw new Error("login failed");
-      const me = (await (await fetch("/api/v1/me", { credentials: "include" })).json()) as {
+      const me = (await (
+        await fetch("/api/v1/me", { credentials: "include" })
+      ).json()) as {
         onboarded?: boolean;
       };
       router.push(me.onboarded ? "/discover" : "/onboarding");
@@ -93,7 +95,11 @@ export function SignInPanel({ className }: { className?: string }) {
                 onClick={() => devLogin(u.email)}
                 className="flex h-10 items-center justify-center rounded-full bg-white/20 text-sm font-bold text-white transition hover:bg-white/30 disabled:opacity-60"
               >
-                {busy === u.email ? <Loader2 className="size-4 animate-spin" /> : u.label}
+                {busy === u.email ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  u.label
+                )}
               </button>
             ))}
           </div>
@@ -101,7 +107,10 @@ export function SignInPanel({ className }: { className?: string }) {
       )}
 
       {error && (
-        <p role="alert" className="rounded-xl bg-black/30 px-3 py-2 text-center text-sm text-white">
+        <p
+          role="alert"
+          className="rounded-xl bg-black/30 px-3 py-2 text-center text-sm text-white"
+        >
           {error}
         </p>
       )}

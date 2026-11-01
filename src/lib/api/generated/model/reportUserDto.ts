@@ -8,9 +8,9 @@
 export interface ReportUserDto {
   userId: string;
   /**
-     * @minLength 3
-     * @maxLength 100
-     */
+   * @minLength 3
+   * @maxLength 100
+   */
   reason: string;
   /** @maxLength 2000 */
   details?: string;

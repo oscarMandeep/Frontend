@@ -4,7 +4,7 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { AvailabilitySlotDto } from './availabilitySlotDto';
+import type { AvailabilitySlotDto } from "./availabilitySlotDto";
 
 export interface UpdateAvailabilityDto {
   slots: AvailabilitySlotDto[];

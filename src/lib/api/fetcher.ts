@@ -25,7 +25,10 @@ export function isApiError(value: unknown): value is ApiError {
 // Generated URLs already start with /v1 (the API's global prefix).
 const BASE = "/api";
 
-export async function apiFetch<T>(url: string, init: RequestInit = {}): Promise<T> {
+export async function apiFetch<T>(
+  url: string,
+  init: RequestInit = {},
+): Promise<T> {
   const doFetch = () =>
     fetch(`${BASE}${url}`, {
       ...init,
@@ -44,9 +47,10 @@ export async function apiFetch<T>(url: string, init: RequestInit = {}): Promise<
       res = await doFetch();
     } else {
       // Clear the dead cookies first, or the proxy would bounce /login back to the app.
-      await fetch(`${BASE}/v1/auth/logout`, { method: "POST", credentials: "include" }).catch(
-        () => undefined,
-      );
+      await fetch(`${BASE}/v1/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      }).catch(() => undefined);
       // Full reload on purpose: drops all in-memory state of an expired session.
       // eslint-disable-next-line @next/next/no-location-assign-relative-destination
       window.location.href = "/login";

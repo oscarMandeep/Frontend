@@ -5,13 +5,12 @@
  * OpenAPI spec version: 1
  */
 
-export type SessionStatus = typeof SessionStatus[keyof typeof SessionStatus];
-
+export type SessionStatus = (typeof SessionStatus)[keyof typeof SessionStatus];
 
 export const SessionStatus = {
-  PROPOSED: 'PROPOSED',
-  CONFIRMED: 'CONFIRMED',
-  COMPLETED: 'COMPLETED',
-  CANCELLED: 'CANCELLED',
-  NO_SHOW: 'NO_SHOW',
+  PROPOSED: "PROPOSED",
+  CONFIRMED: "CONFIRMED",
+  COMPLETED: "COMPLETED",
+  CANCELLED: "CANCELLED",
+  NO_SHOW: "NO_SHOW",
 } as const;

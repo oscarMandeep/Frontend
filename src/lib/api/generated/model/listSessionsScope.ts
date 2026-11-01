@@ -5,10 +5,10 @@
  * OpenAPI spec version: 1
  */
 
-export type ListSessionsScope = typeof ListSessionsScope[keyof typeof ListSessionsScope];
-
+export type ListSessionsScope =
+  (typeof ListSessionsScope)[keyof typeof ListSessionsScope];
 
 export const ListSessionsScope = {
-  upcoming: 'upcoming',
-  past: 'past',
+  upcoming: "upcoming",
+  past: "past",
 } as const;

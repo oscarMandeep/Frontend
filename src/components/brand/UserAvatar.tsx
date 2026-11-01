@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { cn } from "@/lib/utils";
 
 // Soft brand-adjacent gradients so people without a photo still look distinct.
@@ -36,8 +37,13 @@ export function UserAvatar({
   textClassName?: string;
 }) {
   if (src) {
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img src={src} alt={name} className={cn("size-12 rounded-full object-cover", className)} />;
+    return (
+      <img
+        src={src}
+        alt={name}
+        className={cn("size-12 rounded-full object-cover", className)}
+      />
+    );
   }
   return (
     <span

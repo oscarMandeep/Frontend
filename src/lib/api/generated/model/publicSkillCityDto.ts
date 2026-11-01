@@ -4,8 +4,8 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { PublicProfileCardDto } from './publicProfileCardDto';
-import type { SkillRefDto } from './skillRefDto';
+import type { PublicProfileCardDto } from "./publicProfileCardDto";
+import type { SkillRefDto } from "./skillRefDto";
 
 export interface PublicSkillCityDto {
   skill: SkillRefDto;

@@ -4,19 +4,19 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { MatchBreakdownDto } from './matchBreakdownDto';
-import type { MatchType } from './matchType';
-import type { MessageDto } from './messageDto';
-import type { SkillRefDto } from './skillRefDto';
-import type { UserCardDto } from './userCardDto';
+import type { MatchBreakdownDto } from "./matchBreakdownDto";
+import type { MatchType } from "./matchType";
+import type { MessageDto } from "./messageDto";
+import type { SkillRefDto } from "./skillRefDto";
+import type { UserCardDto } from "./userCardDto";
 
 export interface MatchDetailDto {
   id: string;
   type: MatchType;
   /**
-     * @minimum 0
-     * @maximum 100
-     */
+   * @minimum 0
+   * @maximum 100
+   */
   score: number;
   otherUser: UserCardDto;
   /** @nullable */
@@ -27,8 +27,8 @@ export interface MatchDetailDto {
   /** What they teach me */
   learnSkill: SkillRefDto;
   /**
-     * What I teach them
-     * @nullable
-     */
+   * What I teach them
+   * @nullable
+   */
   teachSkill: SkillRefDto | null;
 }

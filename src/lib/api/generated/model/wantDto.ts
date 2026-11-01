@@ -4,15 +4,15 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { Priority } from './priority';
-import type { SkillRefDto } from './skillRefDto';
+import type { Priority } from "./priority";
+import type { SkillRefDto } from "./skillRefDto";
 
 export interface WantDto {
   skill: SkillRefDto;
   /**
-     * @minimum 1
-     * @maximum 5
-     */
+   * @minimum 1
+   * @maximum 5
+   */
   goalLevel: number;
   priority: Priority;
 }

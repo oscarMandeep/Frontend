@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState } from "react";
@@ -110,7 +111,6 @@ export function SwipeCard({
       )}
     >
       {user.avatarUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={user.avatarUrl}
           alt=""

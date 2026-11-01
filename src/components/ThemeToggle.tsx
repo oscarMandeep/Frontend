@@ -12,7 +12,10 @@ export function ThemeToggle({ className }: { className?: string }) {
       type="button"
       aria-label="Toggle light or dark theme"
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-      className={cn("grid size-10 place-items-center rounded-full hover:bg-black/10 dark:hover:bg-white/15", className)}
+      className={cn(
+        "grid size-10 place-items-center rounded-full hover:bg-black/10 dark:hover:bg-white/15",
+        className,
+      )}
     >
       <Sun className="size-5 dark:hidden" />
       <Moon className="hidden size-5 dark:block" />

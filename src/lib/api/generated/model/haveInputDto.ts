@@ -8,14 +8,14 @@
 export interface HaveInputDto {
   skillId: string;
   /**
-     * @minimum 1
-     * @maximum 5
-     */
+   * @minimum 1
+   * @maximum 5
+   */
   level: number;
   /**
-     * @minimum 0
-     * @maximum 60
-     */
+   * @minimum 0
+   * @maximum 60
+   */
   years?: number;
   proofUrl?: string;
 }

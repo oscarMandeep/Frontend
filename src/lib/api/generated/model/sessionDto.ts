@@ -4,11 +4,11 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { Mode } from './mode';
-import type { ReviewDto } from './reviewDto';
-import type { SessionStatus } from './sessionStatus';
-import type { SkillRefDto } from './skillRefDto';
-import type { UserCardDto } from './userCardDto';
+import type { Mode } from "./mode";
+import type { ReviewDto } from "./reviewDto";
+import type { SessionStatus } from "./sessionStatus";
+import type { SkillRefDto } from "./skillRefDto";
+import type { UserCardDto } from "./userCardDto";
 
 export interface SessionDto {
   id: string;
@@ -26,9 +26,9 @@ export interface SessionDto {
   location: string | null;
   status: SessionStatus;
   /**
-     * Who proposed it; the other person confirms
-     * @nullable
-     */
+   * Who proposed it; the other person confirms
+   * @nullable
+   */
   proposedById: string | null;
   /** @nullable */
   myReview: ReviewDto | null;

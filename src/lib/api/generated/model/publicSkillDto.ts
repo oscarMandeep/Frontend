@@ -4,8 +4,8 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { PublicProfileCardDto } from './publicProfileCardDto';
-import type { SwapCountDto } from './swapCountDto';
+import type { PublicProfileCardDto } from "./publicProfileCardDto";
+import type { SwapCountDto } from "./swapCountDto";
 
 export interface PublicSkillDto {
   id: string;

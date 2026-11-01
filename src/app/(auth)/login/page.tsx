@@ -18,7 +18,11 @@ export default function LoginPage() {
       />
       <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-5 py-10 lg:grid-cols-2">
         <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-          <Link href="/" className="rounded-full bg-white px-4 py-1.5 shadow-md" aria-label="SkillSwap home">
+          <Link
+            href="/"
+            className="rounded-full bg-white px-4 py-1.5 shadow-md"
+            aria-label="SkillSwap home"
+          >
             <Logo />
           </Link>
           <h1 className="mt-8 text-4xl leading-tight font-extrabold tracking-tight sm:text-5xl">
@@ -27,7 +31,8 @@ export default function LoginPage() {
             Ready to swap?
           </h1>
           <p className="mt-4 max-w-md text-lg text-white/90">
-            Log in to see your matches, messages and sessions, or join in one tap.
+            Log in to see your matches, messages and sessions, or join in one
+            tap.
           </p>
           <SignInPanel className="mt-8" />
           <p className="mt-4 max-w-xs text-xs text-white/80">

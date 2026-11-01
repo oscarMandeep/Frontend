@@ -4,10 +4,7 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import {
-  useMutation,
-  useQuery
-} from '@tanstack/react-query';
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -20,30 +17,30 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult
-} from '@tanstack/react-query';
+  UseQueryResult,
+} from "@tanstack/react-query";
 
 import type {
   ListMatchesParams,
   ListMessagesParams,
   MatchDetailDto,
   PaginatedMatchesDto,
-  PaginatedMessagesDto
-} from '../model';
+  PaginatedMessagesDto,
+} from "../model";
 
-import { apiFetch } from '../../fetcher';
-
+import { apiFetch } from "../../fetcher";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-
-
-const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKey: K } => {
+const withQueryKey = <T extends object, K>(
+  query: T,
+  queryKey: K,
+): T & { queryKey: K } => {
   const result = { queryKey } as T & { queryKey: K };
   for (const key of Object.keys(query)) {
     // The explicit queryKey always wins, matching the previous
     // `{ ...query, queryKey }` spread where it was set last.
-    if (key === 'queryKey') continue;
+    if (key === "queryKey") continue;
     Object.defineProperty(result, key, {
       enumerable: true,
       configurable: true,
@@ -54,421 +51,575 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
 };
 
 export type listMatchesResponse200 = {
-  data: PaginatedMatchesDto
-  status: 200
-}
+  data: PaginatedMatchesDto;
+  status: 200;
+};
 
-export type listMatchesResponseSuccess = (listMatchesResponse200) & {
+export type listMatchesResponseSuccess = listMatchesResponse200 & {
   headers: Headers;
 };
-;
+export type listMatchesResponse = listMatchesResponseSuccess;
 
-export type listMatchesResponse = (listMatchesResponseSuccess)
-
-export const getListMatchesUrl = (params?: ListMatchesParams,) => {
+export const getListMatchesUrl = (params?: ListMatchesParams) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : String(value))
+      normalizedParams.append(key, value === null ? "null" : String(value));
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/v1/matches?${stringifiedParams}` : `/v1/matches`
-}
+  return stringifiedParams.length > 0
+    ? `/v1/matches?${stringifiedParams}`
+    : `/v1/matches`;
+};
 
-export const listMatches = async (params?: ListMatchesParams, options?: Parameters<typeof apiFetch>[1]): Promise<listMatchesResponse> => {
-
-  return apiFetch<listMatchesResponse>(getListMatchesUrl(params),
-  {
+export const listMatches = async (
+  params?: ListMatchesParams,
+  options?: Parameters<typeof apiFetch>[1],
+): Promise<listMatchesResponse> => {
+  return apiFetch<listMatchesResponse>(getListMatchesUrl(params), {
     ...options,
-    method: 'GET'
+    method: "GET",
+  });
+};
 
+export const getListMatchesQueryKey = (params?: ListMatchesParams) => {
+  return [`/v1/matches`, ...(params ? [params] : [])] as const;
+};
 
-  }
-);}
-
-
-
-
-
-export const getListMatchesQueryKey = (params?: ListMatchesParams,) => {
-    return [
-    `/v1/matches`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getListMatchesQueryOptions = <TData = Awaited<ReturnType<typeof listMatches>>, TError = unknown>(params?: ListMatchesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMatches>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+export const getListMatchesQueryOptions = <
+  TData = Awaited<ReturnType<typeof listMatches>>,
+  TError = unknown,
+>(
+  params?: ListMatchesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof listMatches>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
 ) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getListMatchesQueryKey(params);
 
-  const queryKey =  queryOptions?.queryKey ?? getListMatchesQueryKey(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listMatches>>> = ({
+    signal,
+  }) => listMatches(params, { signal, ...requestOptions });
 
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listMatches>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
+export type ListMatchesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listMatches>>
+>;
+export type ListMatchesQueryError = unknown;
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listMatches>>> = ({ signal }) => listMatches(params, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listMatches>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ListMatchesQueryResult = NonNullable<Awaited<ReturnType<typeof listMatches>>>
-export type ListMatchesQueryError = unknown
-
-
-export function useListMatches<TData = Awaited<ReturnType<typeof listMatches>>, TError = unknown>(
- params: undefined |  ListMatchesParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMatches>>, TError, TData>> & Pick<
+export function useListMatches<
+  TData = Awaited<ReturnType<typeof listMatches>>,
+  TError = unknown,
+>(
+  params: undefined | ListMatchesParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof listMatches>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof listMatches>>,
           TError,
           Awaited<ReturnType<typeof listMatches>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListMatches<TData = Awaited<ReturnType<typeof listMatches>>, TError = unknown>(
- params?: ListMatchesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMatches>>, TError, TData>> & Pick<
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useListMatches<
+  TData = Awaited<ReturnType<typeof listMatches>>,
+  TError = unknown,
+>(
+  params?: ListMatchesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof listMatches>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof listMatches>>,
           TError,
           Awaited<ReturnType<typeof listMatches>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListMatches<TData = Awaited<ReturnType<typeof listMatches>>, TError = unknown>(
- params?: ListMatchesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMatches>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useListMatches<
+  TData = Awaited<ReturnType<typeof listMatches>>,
+  TError = unknown,
+>(
+  params?: ListMatchesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof listMatches>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 
-export function useListMatches<TData = Awaited<ReturnType<typeof listMatches>>, TError = unknown>(
- params?: ListMatchesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMatches>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useListMatches<
+  TData = Awaited<ReturnType<typeof listMatches>>,
+  TError = unknown,
+>(
+  params?: ListMatchesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof listMatches>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getListMatchesQueryOptions(params, options);
 
-  const queryOptions = getListMatchesQueryOptions(params,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
-
-
-
-
-
 
 export type getMatchResponse200 = {
-  data: MatchDetailDto
-  status: 200
-}
+  data: MatchDetailDto;
+  status: 200;
+};
 
-export type getMatchResponseSuccess = (getMatchResponse200) & {
+export type getMatchResponseSuccess = getMatchResponse200 & {
   headers: Headers;
 };
-;
+export type getMatchResponse = getMatchResponseSuccess;
 
-export type getMatchResponse = (getMatchResponseSuccess)
+export const getGetMatchUrl = (id: string) => {
+  return `/v1/matches/${id}`;
+};
 
-export const getGetMatchUrl = (id: string,) => {
-
-
-
-
-  return `/v1/matches/${id}`
-}
-
-export const getMatch = async (id: string, options?: Parameters<typeof apiFetch>[1]): Promise<getMatchResponse> => {
-
-  return apiFetch<getMatchResponse>(getGetMatchUrl(id),
-  {
+export const getMatch = async (
+  id: string,
+  options?: Parameters<typeof apiFetch>[1],
+): Promise<getMatchResponse> => {
+  return apiFetch<getMatchResponse>(getGetMatchUrl(id), {
     ...options,
-    method: 'GET'
+    method: "GET",
+  });
+};
 
+export const getGetMatchQueryKey = (id: string) => {
+  return [`/v1/matches/${id}`] as const;
+};
 
-  }
-);}
-
-
-
-
-
-export const getGetMatchQueryKey = (id: string,) => {
-    return [
-    `/v1/matches/${id}`
-    ] as const;
-    }
-
-
-export const getGetMatchQueryOptions = <TData = Awaited<ReturnType<typeof getMatch>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMatch>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+export const getGetMatchQueryOptions = <
+  TData = Awaited<ReturnType<typeof getMatch>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getMatch>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
 ) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getGetMatchQueryKey(id);
 
-  const queryKey =  queryOptions?.queryKey ?? getGetMatchQueryKey(id);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMatch>>> = ({
+    signal,
+  }) => getMatch(id, { signal, ...requestOptions });
 
+  return {
+    queryKey,
+    queryFn,
+    enabled: id !== null && id !== undefined,
+    ...queryOptions,
+  } as UseQueryOptions<Awaited<ReturnType<typeof getMatch>>, TError, TData> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+};
 
+export type GetMatchQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getMatch>>
+>;
+export type GetMatchQueryError = unknown;
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMatch>>> = ({ signal }) => getMatch(id, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMatch>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetMatchQueryResult = NonNullable<Awaited<ReturnType<typeof getMatch>>>
-export type GetMatchQueryError = unknown
-
-
-export function useGetMatch<TData = Awaited<ReturnType<typeof getMatch>>, TError = unknown>(
- id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMatch>>, TError, TData>> & Pick<
+export function useGetMatch<
+  TData = Awaited<ReturnType<typeof getMatch>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getMatch>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getMatch>>,
           TError,
           Awaited<ReturnType<typeof getMatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetMatch<TData = Awaited<ReturnType<typeof getMatch>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMatch>>, TError, TData>> & Pick<
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetMatch<
+  TData = Awaited<ReturnType<typeof getMatch>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getMatch>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getMatch>>,
           TError,
           Awaited<ReturnType<typeof getMatch>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetMatch<TData = Awaited<ReturnType<typeof getMatch>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMatch>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetMatch<
+  TData = Awaited<ReturnType<typeof getMatch>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getMatch>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 
-export function useGetMatch<TData = Awaited<ReturnType<typeof getMatch>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMatch>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useGetMatch<
+  TData = Awaited<ReturnType<typeof getMatch>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getMatch>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getGetMatchQueryOptions(id, options);
 
-  const queryOptions = getGetMatchQueryOptions(id,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
 
-
-
-
-
-
 export type listMessagesResponse200 = {
-  data: PaginatedMessagesDto
-  status: 200
-}
+  data: PaginatedMessagesDto;
+  status: 200;
+};
 
-export type listMessagesResponseSuccess = (listMessagesResponse200) & {
+export type listMessagesResponseSuccess = listMessagesResponse200 & {
   headers: Headers;
 };
-;
+export type listMessagesResponse = listMessagesResponseSuccess;
 
-export type listMessagesResponse = (listMessagesResponseSuccess)
-
-export const getListMessagesUrl = (id: string,
-    params?: ListMessagesParams,) => {
+export const getListMessagesUrl = (id: string, params?: ListMessagesParams) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : String(value))
+      normalizedParams.append(key, value === null ? "null" : String(value));
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/v1/matches/${id}/messages?${stringifiedParams}` : `/v1/matches/${id}/messages`
-}
+  return stringifiedParams.length > 0
+    ? `/v1/matches/${id}/messages?${stringifiedParams}`
+    : `/v1/matches/${id}/messages`;
+};
 
-export const listMessages = async (id: string,
-    params?: ListMessagesParams, options?: Parameters<typeof apiFetch>[1]): Promise<listMessagesResponse> => {
-
-  return apiFetch<listMessagesResponse>(getListMessagesUrl(id,params),
-  {
+export const listMessages = async (
+  id: string,
+  params?: ListMessagesParams,
+  options?: Parameters<typeof apiFetch>[1],
+): Promise<listMessagesResponse> => {
+  return apiFetch<listMessagesResponse>(getListMessagesUrl(id, params), {
     ...options,
-    method: 'GET'
+    method: "GET",
+  });
+};
 
-
-  }
-);}
-
-
-
-
-
-export const getListMessagesQueryKey = (id: string,
-    params?: ListMessagesParams,) => {
-    return [
-    `/v1/matches/${id}/messages`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getListMessagesQueryOptions = <TData = Awaited<ReturnType<typeof listMessages>>, TError = unknown>(id: string,
-    params?: ListMessagesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMessages>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+export const getListMessagesQueryKey = (
+  id: string,
+  params?: ListMessagesParams,
 ) => {
+  return [`/v1/matches/${id}/messages`, ...(params ? [params] : [])] as const;
+};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+export const getListMessagesQueryOptions = <
+  TData = Awaited<ReturnType<typeof listMessages>>,
+  TError = unknown,
+>(
+  id: string,
+  params?: ListMessagesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof listMessages>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getListMessagesQueryKey(id,params);
+  const queryKey =
+    queryOptions?.queryKey ?? getListMessagesQueryKey(id, params);
 
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listMessages>>> = ({
+    signal,
+  }) => listMessages(id, params, { signal, ...requestOptions });
 
+  return {
+    queryKey,
+    queryFn,
+    enabled: id !== null && id !== undefined,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof listMessages>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listMessages>>> = ({ signal }) => listMessages(id,params, { signal, ...requestOptions });
+export type ListMessagesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listMessages>>
+>;
+export type ListMessagesQueryError = unknown;
 
-
-
-
-
-   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listMessages>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ListMessagesQueryResult = NonNullable<Awaited<ReturnType<typeof listMessages>>>
-export type ListMessagesQueryError = unknown
-
-
-export function useListMessages<TData = Awaited<ReturnType<typeof listMessages>>, TError = unknown>(
- id: string,
-    params: undefined |  ListMessagesParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMessages>>, TError, TData>> & Pick<
+export function useListMessages<
+  TData = Awaited<ReturnType<typeof listMessages>>,
+  TError = unknown,
+>(
+  id: string,
+  params: undefined | ListMessagesParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof listMessages>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof listMessages>>,
           TError,
           Awaited<ReturnType<typeof listMessages>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListMessages<TData = Awaited<ReturnType<typeof listMessages>>, TError = unknown>(
- id: string,
-    params?: ListMessagesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMessages>>, TError, TData>> & Pick<
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useListMessages<
+  TData = Awaited<ReturnType<typeof listMessages>>,
+  TError = unknown,
+>(
+  id: string,
+  params?: ListMessagesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof listMessages>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof listMessages>>,
           TError,
           Awaited<ReturnType<typeof listMessages>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListMessages<TData = Awaited<ReturnType<typeof listMessages>>, TError = unknown>(
- id: string,
-    params?: ListMessagesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMessages>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useListMessages<
+  TData = Awaited<ReturnType<typeof listMessages>>,
+  TError = unknown,
+>(
+  id: string,
+  params?: ListMessagesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof listMessages>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 
-export function useListMessages<TData = Awaited<ReturnType<typeof listMessages>>, TError = unknown>(
- id: string,
-    params?: ListMessagesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMessages>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useListMessages<
+  TData = Awaited<ReturnType<typeof listMessages>>,
+  TError = unknown,
+>(
+  id: string,
+  params?: ListMessagesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof listMessages>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getListMessagesQueryOptions(id, params, options);
 
-  const queryOptions = getListMessagesQueryOptions(id,params,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
 
-
-
-
-
-
 export type archiveMatchResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
-export type archiveMatchResponseSuccess = (archiveMatchResponse204) & {
+export type archiveMatchResponseSuccess = archiveMatchResponse204 & {
   headers: Headers;
 };
-;
+export type archiveMatchResponse = archiveMatchResponseSuccess;
 
-export type archiveMatchResponse = (archiveMatchResponseSuccess)
+export const getArchiveMatchUrl = (id: string) => {
+  return `/v1/matches/${id}/archive`;
+};
 
-export const getArchiveMatchUrl = (id: string,) => {
-
-
-
-
-  return `/v1/matches/${id}/archive`
-}
-
-export const archiveMatch = async (id: string, options?: Parameters<typeof apiFetch>[1]): Promise<archiveMatchResponse> => {
-
-  return apiFetch<archiveMatchResponse>(getArchiveMatchUrl(id),
-  {
+export const archiveMatch = async (
+  id: string,
+  options?: Parameters<typeof apiFetch>[1],
+): Promise<archiveMatchResponse> => {
+  return apiFetch<archiveMatchResponse>(getArchiveMatchUrl(id), {
     ...options,
-    method: 'POST'
+    method: "POST",
+  });
+};
 
+export const getArchiveMatchMutationKey = () => ["archiveMatch"] as const;
 
-  }
-);}
+export const getArchiveMatchMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof archiveMatch>>,
+    TError,
+    ArchiveMatchMutationVariables,
+    TContext
+  >;
+  request?: SecondParameter<typeof apiFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof archiveMatch>>,
+  TError,
+  ArchiveMatchMutationVariables,
+  TContext
+> => {
+  const mutationKey = getArchiveMatchMutationKey();
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof archiveMatch>>,
+    ArchiveMatchMutationVariables
+  > = (props) => {
+    const { id } = props ?? {};
 
+    return archiveMatch(id, requestOptions);
+  };
 
+  return { mutationFn, ...mutationOptions };
+};
 
+export type ArchiveMatchMutationResult = NonNullable<
+  Awaited<ReturnType<typeof archiveMatch>>
+>;
 
-export const getArchiveMatchMutationKey = () => ['archiveMatch'] as const;
+export type ArchiveMatchMutationError = unknown;
+export type ArchiveMatchMutationVariables = { id: string };
 
-export const getArchiveMatchMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof archiveMatch>>, TError,ArchiveMatchMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof archiveMatch>>, TError,ArchiveMatchMutationVariables, TContext> => {
-
-const mutationKey = getArchiveMatchMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof archiveMatch>>, ArchiveMatchMutationVariables> = (props) => {
-          const {id} = props ?? {};
-
-          return  archiveMatch(id,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type ArchiveMatchMutationResult = NonNullable<Awaited<ReturnType<typeof archiveMatch>>>
-
-    export type ArchiveMatchMutationError = unknown
-    export type ArchiveMatchMutationVariables = {id: string}
-
-    export const useArchiveMatch = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof archiveMatch>>, TError,ArchiveMatchMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof archiveMatch>>,
-        TError,
-        ArchiveMatchMutationVariables,
-        TContext
-      > => {
-      return useMutation(getArchiveMatchMutationOptions(options), queryClient);
-    }
+export const useArchiveMatch = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof archiveMatch>>,
+      TError,
+      ArchiveMatchMutationVariables,
+      TContext
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof archiveMatch>>,
+  TError,
+  ArchiveMatchMutationVariables,
+  TContext
+> => {
+  return useMutation(getArchiveMatchMutationOptions(options), queryClient);
+};

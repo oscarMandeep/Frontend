@@ -4,8 +4,8 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { SkillRefDto } from './skillRefDto';
-import type { UserCardDto } from './userCardDto';
+import type { SkillRefDto } from "./skillRefDto";
+import type { UserCardDto } from "./userCardDto";
 
 export interface ChainMemberDto {
   /** 0-based place in the loop; the last member teaches the first */
@@ -14,8 +14,8 @@ export interface ChainMemberDto {
   /** What this person teaches the NEXT person */
   teachSkill: SkillRefDto;
   /**
-     * null = has not answered yet
-     * @nullable
-     */
+   * null = has not answered yet
+   * @nullable
+   */
   accepted: boolean | null;
 }

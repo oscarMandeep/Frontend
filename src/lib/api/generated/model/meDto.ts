@@ -4,10 +4,10 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { AvailabilitySlotDto } from './availabilitySlotDto';
-import type { HaveDto } from './haveDto';
-import type { Mode } from './mode';
-import type { WantDto } from './wantDto';
+import type { AvailabilitySlotDto } from "./availabilitySlotDto";
+import type { HaveDto } from "./haveDto";
+import type { Mode } from "./mode";
+import type { WantDto } from "./wantDto";
 
 export interface MeDto {
   id: string;

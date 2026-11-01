@@ -7,38 +7,38 @@
 
 export interface MatchBreakdownDto {
   /**
-     * @minimum 0
-     * @maximum 1
-     */
+   * @minimum 0
+   * @maximum 1
+   */
   skill: number;
   /**
-     * @minimum 0
-     * @maximum 1
-     */
+   * @minimum 0
+   * @maximum 1
+   */
   reciprocity: number;
   /**
-     * @minimum 0
-     * @maximum 1
-     */
+   * @minimum 0
+   * @maximum 1
+   */
   priority: number;
   /**
-     * @minimum 0
-     * @maximum 1
-     */
+   * @minimum 0
+   * @maximum 1
+   */
   availability: number;
   /**
-     * @minimum 0
-     * @maximum 1
-     */
+   * @minimum 0
+   * @maximum 1
+   */
   mode: number;
   /**
-     * @minimum 0
-     * @maximum 1
-     */
+   * @minimum 0
+   * @maximum 1
+   */
   language: number;
   /**
-     * @minimum 0
-     * @maximum 1
-     */
+   * @minimum 0
+   * @maximum 1
+   */
   trust: number;
 }

@@ -4,10 +4,7 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import {
-  useMutation,
-  useQuery
-} from '@tanstack/react-query';
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -20,27 +17,24 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult
-} from '@tanstack/react-query';
+  UseQueryResult,
+} from "@tanstack/react-query";
 
-import type {
-  DevLoginDto,
-  SocketTokenResponse
-} from '../model';
+import type { DevLoginDto, SocketTokenResponse } from "../model";
 
-import { apiFetch } from '../../fetcher';
-
+import { apiFetch } from "../../fetcher";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-
-
-const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKey: K } => {
+const withQueryKey = <T extends object, K>(
+  query: T,
+  queryKey: K,
+): T & { queryKey: K } => {
   const result = { queryKey } as T & { queryKey: K };
   for (const key of Object.keys(query)) {
     // The explicit queryKey always wins, matching the previous
     // `{ ...query, queryKey }` spread where it was set last.
-    if (key === 'queryKey') continue;
+    if (key === "queryKey") continue;
     Object.defineProperty(result, key, {
       enumerable: true,
       configurable: true,
@@ -51,571 +45,723 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
 };
 
 export type startGoogleLoginResponse200 = {
-  data: void
-  status: 200
-}
+  data: void;
+  status: 200;
+};
 
-export type startGoogleLoginResponseSuccess = (startGoogleLoginResponse200) & {
+export type startGoogleLoginResponseSuccess = startGoogleLoginResponse200 & {
   headers: Headers;
 };
-;
-
-export type startGoogleLoginResponse = (startGoogleLoginResponseSuccess)
+export type startGoogleLoginResponse = startGoogleLoginResponseSuccess;
 
 export const getStartGoogleLoginUrl = () => {
+  return `/v1/auth/google`;
+};
 
-
-
-
-  return `/v1/auth/google`
-}
-
-export const startGoogleLogin = async ( options?: Parameters<typeof apiFetch>[1]): Promise<startGoogleLoginResponse> => {
-
-  return apiFetch<startGoogleLoginResponse>(getStartGoogleLoginUrl(),
-  {
+export const startGoogleLogin = async (
+  options?: Parameters<typeof apiFetch>[1],
+): Promise<startGoogleLoginResponse> => {
+  return apiFetch<startGoogleLoginResponse>(getStartGoogleLoginUrl(), {
     ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-
-
+    method: "GET",
+  });
+};
 
 export const getStartGoogleLoginQueryKey = () => {
-    return [
-    `/v1/auth/google`
-    ] as const;
-    }
+  return [`/v1/auth/google`] as const;
+};
 
+export const getStartGoogleLoginQueryOptions = <
+  TData = Awaited<ReturnType<typeof startGoogleLogin>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof startGoogleLogin>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof apiFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-export const getStartGoogleLoginQueryOptions = <TData = Awaited<ReturnType<typeof startGoogleLogin>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof startGoogleLogin>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
-) => {
+  const queryKey = queryOptions?.queryKey ?? getStartGoogleLoginQueryKey();
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof startGoogleLogin>>
+  > = ({ signal }) => startGoogleLogin({ signal, ...requestOptions });
 
-  const queryKey =  queryOptions?.queryKey ?? getStartGoogleLoginQueryKey();
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof startGoogleLogin>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
+export type StartGoogleLoginQueryResult = NonNullable<
+  Awaited<ReturnType<typeof startGoogleLogin>>
+>;
+export type StartGoogleLoginQueryError = unknown;
 
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof startGoogleLogin>>> = ({ signal }) => startGoogleLogin({ signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof startGoogleLogin>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type StartGoogleLoginQueryResult = NonNullable<Awaited<ReturnType<typeof startGoogleLogin>>>
-export type StartGoogleLoginQueryError = unknown
-
-
-export function useStartGoogleLogin<TData = Awaited<ReturnType<typeof startGoogleLogin>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof startGoogleLogin>>, TError, TData>> & Pick<
+export function useStartGoogleLogin<
+  TData = Awaited<ReturnType<typeof startGoogleLogin>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof startGoogleLogin>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof startGoogleLogin>>,
           TError,
           Awaited<ReturnType<typeof startGoogleLogin>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useStartGoogleLogin<TData = Awaited<ReturnType<typeof startGoogleLogin>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof startGoogleLogin>>, TError, TData>> & Pick<
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useStartGoogleLogin<
+  TData = Awaited<ReturnType<typeof startGoogleLogin>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof startGoogleLogin>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof startGoogleLogin>>,
           TError,
           Awaited<ReturnType<typeof startGoogleLogin>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useStartGoogleLogin<TData = Awaited<ReturnType<typeof startGoogleLogin>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof startGoogleLogin>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useStartGoogleLogin<
+  TData = Awaited<ReturnType<typeof startGoogleLogin>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof startGoogleLogin>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 
-export function useStartGoogleLogin<TData = Awaited<ReturnType<typeof startGoogleLogin>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof startGoogleLogin>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useStartGoogleLogin<
+  TData = Awaited<ReturnType<typeof startGoogleLogin>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof startGoogleLogin>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getStartGoogleLoginQueryOptions(options);
 
-  const queryOptions = getStartGoogleLoginQueryOptions(options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
-
-
-
-
-
 
 export type googleCallbackResponse200 = {
-  data: void
-  status: 200
-}
+  data: void;
+  status: 200;
+};
 
-export type googleCallbackResponseSuccess = (googleCallbackResponse200) & {
+export type googleCallbackResponseSuccess = googleCallbackResponse200 & {
   headers: Headers;
 };
-;
-
-export type googleCallbackResponse = (googleCallbackResponseSuccess)
+export type googleCallbackResponse = googleCallbackResponseSuccess;
 
 export const getGoogleCallbackUrl = () => {
+  return `/v1/auth/google/callback`;
+};
 
-
-
-
-  return `/v1/auth/google/callback`
-}
-
-export const googleCallback = async ( options?: Parameters<typeof apiFetch>[1]): Promise<googleCallbackResponse> => {
-
-  return apiFetch<googleCallbackResponse>(getGoogleCallbackUrl(),
-  {
+export const googleCallback = async (
+  options?: Parameters<typeof apiFetch>[1],
+): Promise<googleCallbackResponse> => {
+  return apiFetch<googleCallbackResponse>(getGoogleCallbackUrl(), {
     ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-
-
+    method: "GET",
+  });
+};
 
 export const getGoogleCallbackQueryKey = () => {
-    return [
-    `/v1/auth/google/callback`
-    ] as const;
-    }
+  return [`/v1/auth/google/callback`] as const;
+};
 
+export const getGoogleCallbackQueryOptions = <
+  TData = Awaited<ReturnType<typeof googleCallback>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof googleCallback>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof apiFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-export const getGoogleCallbackQueryOptions = <TData = Awaited<ReturnType<typeof googleCallback>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof googleCallback>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
-) => {
+  const queryKey = queryOptions?.queryKey ?? getGoogleCallbackQueryKey();
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof googleCallback>>> = ({
+    signal,
+  }) => googleCallback({ signal, ...requestOptions });
 
-  const queryKey =  queryOptions?.queryKey ?? getGoogleCallbackQueryKey();
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof googleCallback>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
+export type GoogleCallbackQueryResult = NonNullable<
+  Awaited<ReturnType<typeof googleCallback>>
+>;
+export type GoogleCallbackQueryError = unknown;
 
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof googleCallback>>> = ({ signal }) => googleCallback({ signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof googleCallback>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GoogleCallbackQueryResult = NonNullable<Awaited<ReturnType<typeof googleCallback>>>
-export type GoogleCallbackQueryError = unknown
-
-
-export function useGoogleCallback<TData = Awaited<ReturnType<typeof googleCallback>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof googleCallback>>, TError, TData>> & Pick<
+export function useGoogleCallback<
+  TData = Awaited<ReturnType<typeof googleCallback>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof googleCallback>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof googleCallback>>,
           TError,
           Awaited<ReturnType<typeof googleCallback>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGoogleCallback<TData = Awaited<ReturnType<typeof googleCallback>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof googleCallback>>, TError, TData>> & Pick<
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGoogleCallback<
+  TData = Awaited<ReturnType<typeof googleCallback>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof googleCallback>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof googleCallback>>,
           TError,
           Awaited<ReturnType<typeof googleCallback>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGoogleCallback<TData = Awaited<ReturnType<typeof googleCallback>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof googleCallback>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGoogleCallback<
+  TData = Awaited<ReturnType<typeof googleCallback>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof googleCallback>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 
-export function useGoogleCallback<TData = Awaited<ReturnType<typeof googleCallback>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof googleCallback>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useGoogleCallback<
+  TData = Awaited<ReturnType<typeof googleCallback>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof googleCallback>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getGoogleCallbackQueryOptions(options);
 
-  const queryOptions = getGoogleCallbackQueryOptions(options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
-
-
-
-
-
 
 export type refreshResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
-export type refreshResponseSuccess = (refreshResponse204) & {
+export type refreshResponseSuccess = refreshResponse204 & {
   headers: Headers;
 };
-;
-
-export type refreshResponse = (refreshResponseSuccess)
+export type refreshResponse = refreshResponseSuccess;
 
 export const getRefreshUrl = () => {
+  return `/v1/auth/refresh`;
+};
 
-
-
-
-  return `/v1/auth/refresh`
-}
-
-export const refresh = async ( options?: Parameters<typeof apiFetch>[1]): Promise<refreshResponse> => {
-
-  return apiFetch<refreshResponse>(getRefreshUrl(),
-  {
+export const refresh = async (
+  options?: Parameters<typeof apiFetch>[1],
+): Promise<refreshResponse> => {
+  return apiFetch<refreshResponse>(getRefreshUrl(), {
     ...options,
-    method: 'POST'
+    method: "POST",
+  });
+};
 
+export const getRefreshMutationKey = () => ["refresh"] as const;
 
-  }
-);}
+export const getRefreshMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof refresh>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof apiFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof refresh>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = getRefreshMutationKey();
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof refresh>>,
+    void
+  > = () => {
+    return refresh(requestOptions);
+  };
 
+  return { mutationFn, ...mutationOptions };
+};
 
+export type RefreshMutationResult = NonNullable<
+  Awaited<ReturnType<typeof refresh>>
+>;
 
+export type RefreshMutationError = unknown;
 
-export const getRefreshMutationKey = () => ['refresh'] as const;
+export const useRefresh = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof refresh>>,
+      TError,
+      void,
+      TContext
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof refresh>>,
+  TError,
+  void,
+  TContext
+> => {
+  return useMutation(getRefreshMutationOptions(options), queryClient);
+};
+export type logoutResponse204 = {
+  data: void;
+  status: 204;
+};
 
-export const getRefreshMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof refresh>>, TError,void, TContext>, request?: SecondParameter<typeof apiFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof refresh>>, TError,void, TContext> => {
-
-const mutationKey = getRefreshMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof refresh>>, void> = () => {
-
-
-          return  refresh(requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type RefreshMutationResult = NonNullable<Awaited<ReturnType<typeof refresh>>>
-
-    export type RefreshMutationError = unknown
-
-
-    export const useRefresh = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof refresh>>, TError,void, TContext>, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof refresh>>,
-        TError,
-        void,
-        TContext
-      > => {
-      return useMutation(getRefreshMutationOptions(options), queryClient);
-    }
-    export type logoutResponse204 = {
-  data: void
-  status: 204
-}
-
-export type logoutResponseSuccess = (logoutResponse204) & {
+export type logoutResponseSuccess = logoutResponse204 & {
   headers: Headers;
 };
-;
-
-export type logoutResponse = (logoutResponseSuccess)
+export type logoutResponse = logoutResponseSuccess;
 
 export const getLogoutUrl = () => {
+  return `/v1/auth/logout`;
+};
 
-
-
-
-  return `/v1/auth/logout`
-}
-
-export const logout = async ( options?: Parameters<typeof apiFetch>[1]): Promise<logoutResponse> => {
-
-  return apiFetch<logoutResponse>(getLogoutUrl(),
-  {
+export const logout = async (
+  options?: Parameters<typeof apiFetch>[1],
+): Promise<logoutResponse> => {
+  return apiFetch<logoutResponse>(getLogoutUrl(), {
     ...options,
-    method: 'POST'
+    method: "POST",
+  });
+};
 
+export const getLogoutMutationKey = () => ["logout"] as const;
 
-  }
-);}
+export const getLogoutMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof logout>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof apiFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof logout>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = getLogoutMutationKey();
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof logout>>,
+    void
+  > = () => {
+    return logout(requestOptions);
+  };
 
+  return { mutationFn, ...mutationOptions };
+};
 
+export type LogoutMutationResult = NonNullable<
+  Awaited<ReturnType<typeof logout>>
+>;
 
+export type LogoutMutationError = unknown;
 
-export const getLogoutMutationKey = () => ['logout'] as const;
+export const useLogout = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof logout>>,
+      TError,
+      void,
+      TContext
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof logout>>,
+  TError,
+  void,
+  TContext
+> => {
+  return useMutation(getLogoutMutationOptions(options), queryClient);
+};
+export type getSocketTokenResponse200 = {
+  data: SocketTokenResponse;
+  status: 200;
+};
 
-export const getLogoutMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof logout>>, TError,void, TContext>, request?: SecondParameter<typeof apiFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof logout>>, TError,void, TContext> => {
-
-const mutationKey = getLogoutMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof logout>>, void> = () => {
-
-
-          return  logout(requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type LogoutMutationResult = NonNullable<Awaited<ReturnType<typeof logout>>>
-
-    export type LogoutMutationError = unknown
-
-
-    export const useLogout = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof logout>>, TError,void, TContext>, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof logout>>,
-        TError,
-        void,
-        TContext
-      > => {
-      return useMutation(getLogoutMutationOptions(options), queryClient);
-    }
-    export type getSocketTokenResponse200 = {
-  data: SocketTokenResponse
-  status: 200
-}
-
-export type getSocketTokenResponseSuccess = (getSocketTokenResponse200) & {
+export type getSocketTokenResponseSuccess = getSocketTokenResponse200 & {
   headers: Headers;
 };
-;
-
-export type getSocketTokenResponse = (getSocketTokenResponseSuccess)
+export type getSocketTokenResponse = getSocketTokenResponseSuccess;
 
 export const getGetSocketTokenUrl = () => {
+  return `/v1/auth/socket-token`;
+};
 
-
-
-
-  return `/v1/auth/socket-token`
-}
-
-export const getSocketToken = async ( options?: Parameters<typeof apiFetch>[1]): Promise<getSocketTokenResponse> => {
-
-  return apiFetch<getSocketTokenResponse>(getGetSocketTokenUrl(),
-  {
+export const getSocketToken = async (
+  options?: Parameters<typeof apiFetch>[1],
+): Promise<getSocketTokenResponse> => {
+  return apiFetch<getSocketTokenResponse>(getGetSocketTokenUrl(), {
     ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-
-
+    method: "GET",
+  });
+};
 
 export const getGetSocketTokenQueryKey = () => {
-    return [
-    `/v1/auth/socket-token`
-    ] as const;
-    }
+  return [`/v1/auth/socket-token`] as const;
+};
 
+export const getGetSocketTokenQueryOptions = <
+  TData = Awaited<ReturnType<typeof getSocketToken>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getSocketToken>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof apiFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-export const getGetSocketTokenQueryOptions = <TData = Awaited<ReturnType<typeof getSocketToken>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSocketToken>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
-) => {
+  const queryKey = queryOptions?.queryKey ?? getGetSocketTokenQueryKey();
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getSocketToken>>> = ({
+    signal,
+  }) => getSocketToken({ signal, ...requestOptions });
 
-  const queryKey =  queryOptions?.queryKey ?? getGetSocketTokenQueryKey();
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getSocketToken>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
+export type GetSocketTokenQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getSocketToken>>
+>;
+export type GetSocketTokenQueryError = unknown;
 
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSocketToken>>> = ({ signal }) => getSocketToken({ signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSocketToken>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetSocketTokenQueryResult = NonNullable<Awaited<ReturnType<typeof getSocketToken>>>
-export type GetSocketTokenQueryError = unknown
-
-
-export function useGetSocketToken<TData = Awaited<ReturnType<typeof getSocketToken>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSocketToken>>, TError, TData>> & Pick<
+export function useGetSocketToken<
+  TData = Awaited<ReturnType<typeof getSocketToken>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getSocketToken>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getSocketToken>>,
           TError,
           Awaited<ReturnType<typeof getSocketToken>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetSocketToken<TData = Awaited<ReturnType<typeof getSocketToken>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSocketToken>>, TError, TData>> & Pick<
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetSocketToken<
+  TData = Awaited<ReturnType<typeof getSocketToken>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getSocketToken>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getSocketToken>>,
           TError,
           Awaited<ReturnType<typeof getSocketToken>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetSocketToken<TData = Awaited<ReturnType<typeof getSocketToken>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSocketToken>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetSocketToken<
+  TData = Awaited<ReturnType<typeof getSocketToken>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getSocketToken>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 
-export function useGetSocketToken<TData = Awaited<ReturnType<typeof getSocketToken>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSocketToken>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useGetSocketToken<
+  TData = Awaited<ReturnType<typeof getSocketToken>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getSocketToken>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getGetSocketTokenQueryOptions(options);
 
-  const queryOptions = getGetSocketTokenQueryOptions(options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
 
-
-
-
-
-
 export type devLoginResponse204 = {
-  data: void
-  status: 204
-}
+  data: void;
+  status: 204;
+};
 
-export type devLoginResponseSuccess = (devLoginResponse204) & {
+export type devLoginResponseSuccess = devLoginResponse204 & {
   headers: Headers;
 };
-;
-
-export type devLoginResponse = (devLoginResponseSuccess)
+export type devLoginResponse = devLoginResponseSuccess;
 
 export const getDevLoginUrl = () => {
+  return `/v1/auth/dev-login`;
+};
 
-
-
-
-  return `/v1/auth/dev-login`
-}
-
-export const devLogin = async (devLoginDto: DevLoginDto, options?: Parameters<typeof apiFetch>[1]): Promise<devLoginResponse> => {
-
-    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+export const devLogin = async (
+  devLoginDto: DevLoginDto,
+  options?: Parameters<typeof apiFetch>[1],
+): Promise<devLoginResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit["headers"]>,
+  ): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Symbol.iterator in h) {
       return Object.fromEntries(
-        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
       if (value !== undefined) headers[name] = value;
     }
     return headers;
   };
-return apiFetch<devLoginResponse>(getDevLoginUrl(),
-  {
+  return apiFetch<devLoginResponse>(getDevLoginUrl(), {
     ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
-    body: JSON.stringify(devLoginDto)
-  }
-);}
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(devLoginDto),
+  });
+};
 
+export const getDevLoginMutationKey = () => ["devLogin"] as const;
 
+export const getDevLoginMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof devLogin>>,
+    TError,
+    DevLoginMutationVariables,
+    TContext
+  >;
+  request?: SecondParameter<typeof apiFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof devLogin>>,
+  TError,
+  DevLoginMutationVariables,
+  TContext
+> => {
+  const mutationKey = getDevLoginMutationKey();
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof devLogin>>,
+    DevLoginMutationVariables
+  > = (props) => {
+    const { data } = props ?? {};
 
+    return devLogin(data, requestOptions);
+  };
 
-export const getDevLoginMutationKey = () => ['devLogin'] as const;
+  return { mutationFn, ...mutationOptions };
+};
 
-export const getDevLoginMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof devLogin>>, TError,DevLoginMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof devLogin>>, TError,DevLoginMutationVariables, TContext> => {
+export type DevLoginMutationResult = NonNullable<
+  Awaited<ReturnType<typeof devLogin>>
+>;
+export type DevLoginMutationBody = DevLoginDto;
+export type DevLoginMutationError = unknown;
+export type DevLoginMutationVariables = { data: DevLoginDto };
 
-const mutationKey = getDevLoginMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof devLogin>>, DevLoginMutationVariables> = (props) => {
-          const {data} = props ?? {};
-
-          return  devLogin(data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type DevLoginMutationResult = NonNullable<Awaited<ReturnType<typeof devLogin>>>
-    export type DevLoginMutationBody = DevLoginDto
-    export type DevLoginMutationError = unknown
-    export type DevLoginMutationVariables = {data: DevLoginDto}
-
-    export const useDevLogin = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof devLogin>>, TError,DevLoginMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof devLogin>>,
-        TError,
-        DevLoginMutationVariables,
-        TContext
-      > => {
-      return useMutation(getDevLoginMutationOptions(options), queryClient);
-    }
+export const useDevLogin = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof devLogin>>,
+      TError,
+      DevLoginMutationVariables,
+      TContext
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof devLogin>>,
+  TError,
+  DevLoginMutationVariables,
+  TContext
+> => {
+  return useMutation(getDevLoginMutationOptions(options), queryClient);
+};

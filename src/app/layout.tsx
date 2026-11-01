@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { siteUrl } from "@/lib/seo";
 import { Providers } from "@/components/providers";
 import "./globals.css";
 
@@ -15,8 +16,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SkillSwap",
-  description: "Swap skills with people near you. Teach what you know, learn what you want.",
+  metadataBase: new URL(siteUrl),
+  title: { default: "SkillSwap", template: "%s" },
+  description:
+    "Swap skills with people near you. Teach what you know, learn what you want.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

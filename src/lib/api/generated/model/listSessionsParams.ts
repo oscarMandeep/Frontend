@@ -4,7 +4,7 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { ListSessionsScope } from './listSessionsScope';
+import type { ListSessionsScope } from "./listSessionsScope";
 
 export type ListSessionsParams = {
   scope?: ListSessionsScope;

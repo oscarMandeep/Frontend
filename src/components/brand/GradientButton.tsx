@@ -3,7 +3,10 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 /** Primary call-to-action: brand gradient, pill shape (docs/05 §4). */
-export function GradientButton({ className, ...props }: ComponentProps<typeof Button>) {
+export function GradientButton({
+  className,
+  ...props
+}: ComponentProps<typeof Button>) {
   return (
     <Button
       className={cn(

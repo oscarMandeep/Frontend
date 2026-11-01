@@ -4,7 +4,7 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { CreateSessionDtoMode } from './createSessionDtoMode';
+import type { CreateSessionDtoMode } from "./createSessionDtoMode";
 
 export interface CreateSessionDto {
   matchId: string;
@@ -13,10 +13,10 @@ export interface CreateSessionDto {
   teacherId: string;
   startsAt: string;
   /**
-     * Minutes, in steps of 15
-     * @minimum 15
-     * @maximum 180
-     */
+   * Minutes, in steps of 15
+   * @minimum 15
+   * @maximum 180
+   */
   durationMin: number;
   mode: CreateSessionDtoMode;
   /** Required for IN_PERSON */

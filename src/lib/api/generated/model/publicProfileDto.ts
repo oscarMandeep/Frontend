@@ -4,8 +4,8 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { PublicHaveDto } from './publicHaveDto';
-import type { PublicWantDto } from './publicWantDto';
+import type { PublicHaveDto } from "./publicHaveDto";
+import type { PublicWantDto } from "./publicWantDto";
 
 export interface PublicProfileDto {
   username: string;

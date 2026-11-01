@@ -4,7 +4,7 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { Mode } from './mode';
+import type { Mode } from "./mode";
 
 export interface UpdateMeDto {
   name?: string;

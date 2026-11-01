@@ -6,16 +6,40 @@ import { MatchRing } from "@/components/brand/MatchRing";
 import { UserAvatar } from "@/components/brand/UserAvatar";
 
 const PEOPLE = [
-  { id: "a1", name: "Diya Nair", city: "Dehradun", score: 92, teaches: "Spanish", wants: "Guitar" },
-  { id: "b2", name: "Aarav Sharma", city: "Haridwar", score: 81, teaches: "Guitar", wants: "Python" },
-  { id: "c3", name: "Riya Verma", city: "Delhi", score: 74, teaches: "Photography", wants: "Excel" },
+  {
+    id: "a1",
+    name: "Diya Nair",
+    city: "Dehradun",
+    score: 92,
+    teaches: "Spanish",
+    wants: "Guitar",
+  },
+  {
+    id: "b2",
+    name: "Aarav Sharma",
+    city: "Haridwar",
+    score: 81,
+    teaches: "Guitar",
+    wants: "Python",
+  },
+  {
+    id: "c3",
+    name: "Riya Verma",
+    city: "Delhi",
+    score: 74,
+    teaches: "Photography",
+    wants: "Excel",
+  },
 ];
 
 /** Decorative stack of three swipe cards for the hero. Pure presentation. */
 export function HeroCards() {
   const reduce = useReducedMotion();
   return (
-    <div className="relative mx-auto h-[460px] w-[300px] sm:h-[520px] sm:w-[340px]" aria-hidden="true">
+    <div
+      className="relative mx-auto h-[460px] w-[300px] sm:h-[520px] sm:w-[340px]"
+      aria-hidden="true"
+    >
       {PEOPLE.map((p, i) => {
         const depth = PEOPLE.length - 1 - i; // 0 = top card
         return (
@@ -31,12 +55,21 @@ export function HeroCards() {
               scale: 1 - i * 0.04,
               x: i === 0 ? 0 : i === 1 ? 26 : -26,
             }}
-            transition={{ delay: reduce ? 0 : 0.15 * depth, type: "spring", stiffness: 120, damping: 16 }}
+            transition={{
+              delay: reduce ? 0 : 0.15 * depth,
+              type: "spring",
+              stiffness: 120,
+              damping: 16,
+            }}
           >
             <motion.div
               className="flex h-full flex-col"
               animate={reduce ? undefined : { y: [0, -6, 0] }}
-              transition={{ duration: 5 + i, repeat: Infinity, ease: "easeInOut" }}
+              transition={{
+                duration: 5 + i,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
             >
               <div className="relative flex-1 overflow-hidden">
                 <UserAvatar

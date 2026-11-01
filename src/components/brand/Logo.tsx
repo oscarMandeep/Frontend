@@ -12,12 +12,24 @@ export function LogoMark({ className }: { className?: string }) {
       className={cn("size-8", className)}
     >
       <defs>
-        <linearGradient id={id} x1="0" y1="32" x2="32" y2="0" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id={id}
+          x1="0"
+          y1="32"
+          x2="32"
+          y2="0"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop offset="0" style={{ stopColor: "var(--brand-pink)" }} />
           <stop offset="1" style={{ stopColor: "var(--brand-orange)" }} />
         </linearGradient>
       </defs>
-      <g stroke={`url(#${id})`} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+      <g
+        stroke={`url(#${id})`}
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M5 11h19" />
         <path d="M19 5l6 6-6 6" />
         <path d="M27 21H8" />
@@ -27,7 +39,13 @@ export function LogoMark({ className }: { className?: string }) {
   );
 }
 
-export function Logo({ className, showWordmark = true }: { className?: string; showWordmark?: boolean }) {
+export function Logo({
+  className,
+  showWordmark = true,
+}: {
+  className?: string;
+  showWordmark?: boolean;
+}) {
   return (
     <span className={cn("inline-flex items-center gap-2", className)}>
       <LogoMark />

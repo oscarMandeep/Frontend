@@ -4,10 +4,7 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import {
-  useMutation,
-  useQuery
-} from '@tanstack/react-query';
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -20,28 +17,24 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult
-} from '@tanstack/react-query';
+  UseQueryResult,
+} from "@tanstack/react-query";
 
-import type {
-  CreateSkillDto,
-  SearchSkillsParams,
-  SkillRefDto
-} from '../model';
+import type { CreateSkillDto, SearchSkillsParams, SkillRefDto } from "../model";
 
-import { apiFetch } from '../../fetcher';
-
+import { apiFetch } from "../../fetcher";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-
-
-const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKey: K } => {
+const withQueryKey = <T extends object, K>(
+  query: T,
+  queryKey: K,
+): T & { queryKey: K } => {
   const result = { queryKey } as T & { queryKey: K };
   for (const key of Object.keys(query)) {
     // The explicit queryKey always wins, matching the previous
     // `{ ...query, queryKey }` spread where it was set last.
-    if (key === 'queryKey') continue;
+    if (key === "queryKey") continue;
     Object.defineProperty(result, key, {
       enumerable: true,
       configurable: true,
@@ -52,208 +45,277 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
 };
 
 export type searchSkillsResponse200 = {
-  data: SkillRefDto[]
-  status: 200
-}
+  data: SkillRefDto[];
+  status: 200;
+};
 
-export type searchSkillsResponseSuccess = (searchSkillsResponse200) & {
+export type searchSkillsResponseSuccess = searchSkillsResponse200 & {
   headers: Headers;
 };
-;
+export type searchSkillsResponse = searchSkillsResponseSuccess;
 
-export type searchSkillsResponse = (searchSkillsResponseSuccess)
-
-export const getSearchSkillsUrl = (params: SearchSkillsParams,) => {
+export const getSearchSkillsUrl = (params: SearchSkillsParams) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : String(value))
+      normalizedParams.append(key, value === null ? "null" : String(value));
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/v1/skills/search?${stringifiedParams}` : `/v1/skills/search`
-}
+  return stringifiedParams.length > 0
+    ? `/v1/skills/search?${stringifiedParams}`
+    : `/v1/skills/search`;
+};
 
-export const searchSkills = async (params: SearchSkillsParams, options?: Parameters<typeof apiFetch>[1]): Promise<searchSkillsResponse> => {
-
-  return apiFetch<searchSkillsResponse>(getSearchSkillsUrl(params),
-  {
+export const searchSkills = async (
+  params: SearchSkillsParams,
+  options?: Parameters<typeof apiFetch>[1],
+): Promise<searchSkillsResponse> => {
+  return apiFetch<searchSkillsResponse>(getSearchSkillsUrl(params), {
     ...options,
-    method: 'GET'
+    method: "GET",
+  });
+};
 
+export const getSearchSkillsQueryKey = (params?: SearchSkillsParams) => {
+  return [`/v1/skills/search`, ...(params ? [params] : [])] as const;
+};
 
-  }
-);}
-
-
-
-
-
-export const getSearchSkillsQueryKey = (params?: SearchSkillsParams,) => {
-    return [
-    `/v1/skills/search`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getSearchSkillsQueryOptions = <TData = Awaited<ReturnType<typeof searchSkills>>, TError = unknown>(params: SearchSkillsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchSkills>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+export const getSearchSkillsQueryOptions = <
+  TData = Awaited<ReturnType<typeof searchSkills>>,
+  TError = unknown,
+>(
+  params: SearchSkillsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof searchSkills>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
 ) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getSearchSkillsQueryKey(params);
 
-  const queryKey =  queryOptions?.queryKey ?? getSearchSkillsQueryKey(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof searchSkills>>> = ({
+    signal,
+  }) => searchSkills(params, { signal, ...requestOptions });
 
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof searchSkills>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
+export type SearchSkillsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof searchSkills>>
+>;
+export type SearchSkillsQueryError = unknown;
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof searchSkills>>> = ({ signal }) => searchSkills(params, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof searchSkills>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type SearchSkillsQueryResult = NonNullable<Awaited<ReturnType<typeof searchSkills>>>
-export type SearchSkillsQueryError = unknown
-
-
-export function useSearchSkills<TData = Awaited<ReturnType<typeof searchSkills>>, TError = unknown>(
- params: SearchSkillsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchSkills>>, TError, TData>> & Pick<
+export function useSearchSkills<
+  TData = Awaited<ReturnType<typeof searchSkills>>,
+  TError = unknown,
+>(
+  params: SearchSkillsParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof searchSkills>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof searchSkills>>,
           TError,
           Awaited<ReturnType<typeof searchSkills>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useSearchSkills<TData = Awaited<ReturnType<typeof searchSkills>>, TError = unknown>(
- params: SearchSkillsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchSkills>>, TError, TData>> & Pick<
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useSearchSkills<
+  TData = Awaited<ReturnType<typeof searchSkills>>,
+  TError = unknown,
+>(
+  params: SearchSkillsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof searchSkills>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof searchSkills>>,
           TError,
           Awaited<ReturnType<typeof searchSkills>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useSearchSkills<TData = Awaited<ReturnType<typeof searchSkills>>, TError = unknown>(
- params: SearchSkillsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchSkills>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useSearchSkills<
+  TData = Awaited<ReturnType<typeof searchSkills>>,
+  TError = unknown,
+>(
+  params: SearchSkillsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof searchSkills>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 
-export function useSearchSkills<TData = Awaited<ReturnType<typeof searchSkills>>, TError = unknown>(
- params: SearchSkillsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchSkills>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useSearchSkills<
+  TData = Awaited<ReturnType<typeof searchSkills>>,
+  TError = unknown,
+>(
+  params: SearchSkillsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof searchSkills>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getSearchSkillsQueryOptions(params, options);
 
-  const queryOptions = getSearchSkillsQueryOptions(params,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
 
-
-
-
-
-
 export type createSkillResponse201 = {
-  data: SkillRefDto
-  status: 201
-}
+  data: SkillRefDto;
+  status: 201;
+};
 
-export type createSkillResponseSuccess = (createSkillResponse201) & {
+export type createSkillResponseSuccess = createSkillResponse201 & {
   headers: Headers;
 };
-;
-
-export type createSkillResponse = (createSkillResponseSuccess)
+export type createSkillResponse = createSkillResponseSuccess;
 
 export const getCreateSkillUrl = () => {
+  return `/v1/skills`;
+};
 
-
-
-
-  return `/v1/skills`
-}
-
-export const createSkill = async (createSkillDto: CreateSkillDto, options?: Parameters<typeof apiFetch>[1]): Promise<createSkillResponse> => {
-
-    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+export const createSkill = async (
+  createSkillDto: CreateSkillDto,
+  options?: Parameters<typeof apiFetch>[1],
+): Promise<createSkillResponse> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit["headers"]>,
+  ): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Symbol.iterator in h) {
       return Object.fromEntries(
-        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
       if (value !== undefined) headers[name] = value;
     }
     return headers;
   };
-return apiFetch<createSkillResponse>(getCreateSkillUrl(),
-  {
+  return apiFetch<createSkillResponse>(getCreateSkillUrl(), {
     ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
-    body: JSON.stringify(createSkillDto)
-  }
-);}
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(createSkillDto),
+  });
+};
 
+export const getCreateSkillMutationKey = () => ["createSkill"] as const;
 
+export const getCreateSkillMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createSkill>>,
+    TError,
+    CreateSkillMutationVariables,
+    TContext
+  >;
+  request?: SecondParameter<typeof apiFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createSkill>>,
+  TError,
+  CreateSkillMutationVariables,
+  TContext
+> => {
+  const mutationKey = getCreateSkillMutationKey();
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createSkill>>,
+    CreateSkillMutationVariables
+  > = (props) => {
+    const { data } = props ?? {};
 
+    return createSkill(data, requestOptions);
+  };
 
-export const getCreateSkillMutationKey = () => ['createSkill'] as const;
+  return { mutationFn, ...mutationOptions };
+};
 
-export const getCreateSkillMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSkill>>, TError,CreateSkillMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof createSkill>>, TError,CreateSkillMutationVariables, TContext> => {
+export type CreateSkillMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createSkill>>
+>;
+export type CreateSkillMutationBody = CreateSkillDto;
+export type CreateSkillMutationError = unknown;
+export type CreateSkillMutationVariables = { data: CreateSkillDto };
 
-const mutationKey = getCreateSkillMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createSkill>>, CreateSkillMutationVariables> = (props) => {
-          const {data} = props ?? {};
-
-          return  createSkill(data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateSkillMutationResult = NonNullable<Awaited<ReturnType<typeof createSkill>>>
-    export type CreateSkillMutationBody = CreateSkillDto
-    export type CreateSkillMutationError = unknown
-    export type CreateSkillMutationVariables = {data: CreateSkillDto}
-
-    export const useCreateSkill = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSkill>>, TError,CreateSkillMutationVariables, TContext>, request?: SecondParameter<typeof apiFetch>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof createSkill>>,
-        TError,
-        CreateSkillMutationVariables,
-        TContext
-      > => {
-      return useMutation(getCreateSkillMutationOptions(options), queryClient);
-    }
+export const useCreateSkill = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof createSkill>>,
+      TError,
+      CreateSkillMutationVariables,
+      TContext
+    >;
+    request?: SecondParameter<typeof apiFetch>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof createSkill>>,
+  TError,
+  CreateSkillMutationVariables,
+  TContext
+> => {
+  return useMutation(getCreateSkillMutationOptions(options), queryClient);
+};

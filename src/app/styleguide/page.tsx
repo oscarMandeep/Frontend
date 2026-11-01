@@ -52,7 +52,13 @@ function Swatch({ token, label }: { token: string; label?: string }) {
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
     <section className="space-y-3">
       <h2 className="text-2xl font-bold">{title}</h2>
@@ -71,7 +77,9 @@ export default function StyleguidePage() {
 
       <Section title="Brand">
         <div className="bg-brand-gradient h-20 rounded-2xl" />
-        <p className="text-brand-gradient text-4xl font-extrabold">It&apos;s a match!</p>
+        <p className="text-brand-gradient text-4xl font-extrabold">
+          It&apos;s a match!
+        </p>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {BRAND.map((t) => (
             <Swatch key={t} token={t} />

@@ -4,9 +4,9 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { HaveDto } from './haveDto';
-import type { Mode } from './mode';
-import type { WantDto } from './wantDto';
+import type { HaveDto } from "./haveDto";
+import type { Mode } from "./mode";
+import type { WantDto } from "./wantDto";
 
 export interface UserCardDto {
   id: string;

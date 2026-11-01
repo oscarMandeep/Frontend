@@ -4,7 +4,7 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { PaginatedCreditTxDto } from './paginatedCreditTxDto';
+import type { PaginatedCreditTxDto } from "./paginatedCreditTxDto";
 
 export interface WalletDto {
   balance: number;

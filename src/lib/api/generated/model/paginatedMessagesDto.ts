@@ -4,7 +4,7 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { MessageDto } from './messageDto';
+import type { MessageDto } from "./messageDto";
 
 export interface PaginatedMessagesDto {
   items: MessageDto[];

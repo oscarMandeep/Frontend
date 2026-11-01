@@ -4,17 +4,17 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { MatchType } from './matchType';
-import type { MessageDto } from './messageDto';
-import type { UserCardDto } from './userCardDto';
+import type { MatchType } from "./matchType";
+import type { MessageDto } from "./messageDto";
+import type { UserCardDto } from "./userCardDto";
 
 export interface MatchSummaryDto {
   id: string;
   type: MatchType;
   /**
-     * @minimum 0
-     * @maximum 100
-     */
+   * @minimum 0
+   * @maximum 100
+   */
   score: number;
   otherUser: UserCardDto;
   /** @nullable */

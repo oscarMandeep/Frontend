@@ -4,7 +4,7 @@
  * SkillSwap API
  * OpenAPI spec version: 1
  */
-import type { MatchSummaryDto } from './matchSummaryDto';
+import type { MatchSummaryDto } from "./matchSummaryDto";
 
 export interface PaginatedMatchesDto {
   items: MatchSummaryDto[];

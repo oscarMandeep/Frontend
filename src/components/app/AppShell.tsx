@@ -32,7 +32,8 @@ const NAV: NavItem[] = [
   { href: "/profile", label: "Profile", icon: UserRound },
 ];
 
-const isActive = (path: string, href: string) => path === href || path.startsWith(`${href}/`);
+const isActive = (path: string, href: string) =>
+  path === href || path.startsWith(`${href}/`);
 
 function CreditsPill({ credits }: { credits?: number }) {
   return (
@@ -74,7 +75,9 @@ export function AppShell({ children }: { children: ReactNode }) {
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   "flex items-center gap-3 rounded-xl px-3 py-2.5 font-semibold transition-colors",
-                  active ? "bg-accent text-brand" : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                  active
+                    ? "bg-accent text-brand"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
                 )}
               >
                 <item.icon className="size-5" />
@@ -86,8 +89,16 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="mt-auto flex items-center justify-between gap-2 border-t border-border pt-4">
           {profile && (
             <Link href="/profile" className="flex min-w-0 items-center gap-2">
-              <UserAvatar id={profile.id} name={profile.name} src={profile.avatarUrl} className="size-9" textClassName="text-xs" />
-              <span className="truncate text-sm font-semibold">{profile.name}</span>
+              <UserAvatar
+                id={profile.id}
+                name={profile.name}
+                src={profile.avatarUrl}
+                className="size-9"
+                textClassName="text-xs"
+              />
+              <span className="truncate text-sm font-semibold">
+                {profile.name}
+              </span>
             </Link>
           )}
           <div className="flex items-center gap-1">
@@ -109,7 +120,9 @@ export function AppShell({ children }: { children: ReactNode }) {
             </div>
           </header>
         )}
-        <main className={cn("flex-1", !inChat && "pb-20 lg:pb-0")}>{children}</main>
+        <main className={cn("flex-1", !inChat && "pb-20 lg:pb-0")}>
+          {children}
+        </main>
       </div>
 
       {!inChat && (

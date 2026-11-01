@@ -1,12 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeftRight, Coins, MessageCircle, Repeat2, Sparkles, Users } from "lucide-react";
+import {
+  ArrowLeftRight,
+  Coins,
+  MessageCircle,
+  Repeat2,
+  Sparkles,
+  Users,
+} from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import { SignInPanel } from "@/components/auth/SignInPanel";
 import { HeroCards } from "@/components/marketing/HeroCards";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { publicFetch } from "@/lib/api/public";
 import type { PublicStatsDto } from "@/lib/api/generated/model";
+import { siteUrl } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -18,7 +27,10 @@ export const metadata: Metadata = {
 
 async function getStats(): Promise<PublicStatsDto | null> {
   try {
-    return await publicFetch<PublicStatsDto>("/stats", { revalidate: 3600, tags: ["stats"] });
+    return await publicFetch<PublicStatsDto>("/stats", {
+      revalidate: 3600,
+      tags: ["stats"],
+    });
   } catch {
     return null; // API asleep or down: the page still renders
   }
@@ -88,10 +100,16 @@ export default async function LandingPage() {
             <Logo />
           </span>
           <nav className="flex items-center gap-2 text-sm font-semibold">
-            <Link href="/skills" className="hidden rounded-full px-4 py-2 hover:bg-white/15 sm:block">
+            <Link
+              href="/skills"
+              className="hidden rounded-full px-4 py-2 hover:bg-white/15 sm:block"
+            >
               Browse skills
             </Link>
-            <Link href="/login" className="rounded-full bg-white/20 px-4 py-2 backdrop-blur hover:bg-white/30">
+            <Link
+              href="/login"
+              className="rounded-full bg-white/20 px-4 py-2 backdrop-blur hover:bg-white/30"
+            >
               Log in
             </Link>
             <ThemeToggle />
@@ -108,11 +126,13 @@ export default async function LandingPage() {
               you want.
             </h1>
             <p className="mt-5 max-w-md text-lg text-white/90">
-              SkillSwap matches you with people who teach what you want to learn, and want what you can
-              teach. Swipe, match, chat, learn.
+              SkillSwap matches you with people who teach what you want to
+              learn, and want what you can teach. Swipe, match, chat, learn.
             </p>
             <SignInPanel className="mt-8" />
-            <p className="mt-4 text-sm text-white/80">Free to join. Your email is never shown to anyone.</p>
+            <p className="mt-4 text-sm text-white/80">
+              Free to join. Your email is never shown to anyone.
+            </p>
           </div>
           <HeroCards />
         </div>
@@ -124,7 +144,9 @@ export default async function LandingPage() {
             <dl className="mx-auto grid max-w-3xl grid-cols-3 gap-4 px-5 py-8 text-center">
               {numbers.map((n) => (
                 <div key={n.label}>
-                  <dd className="text-brand-gradient text-4xl font-extrabold">{n.value.toLocaleString()}</dd>
+                  <dd className="text-brand-gradient text-4xl font-extrabold">
+                    {n.value.toLocaleString()}
+                  </dd>
                   <dt className="text-sm text-muted-foreground">{n.label}</dt>
                 </div>
               ))}
@@ -133,14 +155,21 @@ export default async function LandingPage() {
         )}
 
         <section className="mx-auto max-w-6xl px-5 py-20">
-          <h2 className="text-center text-3xl font-extrabold sm:text-4xl">How it works</h2>
+          <h2 className="text-center text-3xl font-extrabold sm:text-4xl">
+            How it works
+          </h2>
           <ol className="mt-12 grid gap-6 md:grid-cols-3">
             {STEPS.map((s, i) => (
-              <li key={s.title} className="rounded-3xl border border-border bg-card p-7 shadow-sm">
+              <li
+                key={s.title}
+                className="rounded-3xl border border-border bg-card p-7 shadow-sm"
+              >
                 <span className="bg-brand-gradient grid size-12 place-items-center rounded-2xl text-white shadow-md">
                   <s.icon className="size-6" />
                 </span>
-                <p className="mt-5 text-sm font-bold text-muted-foreground">Step {i + 1}</p>
+                <p className="mt-5 text-sm font-bold text-muted-foreground">
+                  Step {i + 1}
+                </p>
                 <h3 className="mt-1 text-xl font-bold">{s.title}</h3>
                 <p className="mt-2 text-muted-foreground">{s.text}</p>
               </li>
@@ -150,10 +179,15 @@ export default async function LandingPage() {
 
         <section className="bg-surface">
           <div className="mx-auto max-w-6xl px-5 py-20">
-            <h2 className="text-center text-3xl font-extrabold sm:text-4xl">More ways to learn for free</h2>
+            <h2 className="text-center text-3xl font-extrabold sm:text-4xl">
+              More ways to learn for free
+            </h2>
             <div className="mt-12 grid gap-6 md:grid-cols-3">
               {PERKS.map((p) => (
-                <div key={p.title} className="rounded-3xl bg-card p-7 shadow-sm">
+                <div
+                  key={p.title}
+                  className="rounded-3xl bg-card p-7 shadow-sm"
+                >
                   <p.icon className="size-8 text-brand" />
                   <h3 className="mt-4 text-xl font-bold">{p.title}</h3>
                   <p className="mt-2 text-muted-foreground">{p.text}</p>
@@ -165,7 +199,9 @@ export default async function LandingPage() {
 
         {stats && stats.topSwaps.length > 0 && (
           <section className="mx-auto max-w-4xl px-5 py-20">
-            <h2 className="text-center text-3xl font-extrabold sm:text-4xl">Popular swaps</h2>
+            <h2 className="text-center text-3xl font-extrabold sm:text-4xl">
+              Popular swaps
+            </h2>
             <ul className="mt-10 grid gap-3 sm:grid-cols-2">
               {stats.topSwaps.map((s) => (
                 <li
@@ -173,9 +209,13 @@ export default async function LandingPage() {
                   className="flex items-center justify-between rounded-2xl border border-border bg-card px-5 py-4"
                 >
                   <span className="font-bold">
-                    {s.from.name} <ArrowLeftRight className="mx-1 inline size-4 text-brand" /> {s.to.name}
+                    {s.from.name}{" "}
+                    <ArrowLeftRight className="mx-1 inline size-4 text-brand" />{" "}
+                    {s.to.name}
                   </span>
-                  <span className="text-sm text-muted-foreground">{s.count} people</span>
+                  <span className="text-sm text-muted-foreground">
+                    {s.count} people
+                  </span>
                 </li>
               ))}
             </ul>
@@ -184,12 +224,23 @@ export default async function LandingPage() {
 
         <section className="bg-brand-gradient text-white">
           <div className="mx-auto flex max-w-3xl flex-col items-center px-5 py-20 text-center">
-            <h2 className="text-3xl font-extrabold sm:text-4xl">Your next skill is one swipe away.</h2>
+            <h2 className="text-3xl font-extrabold sm:text-4xl">
+              Your next skill is one swipe away.
+            </h2>
             <SignInPanel className="mt-8" />
           </div>
         </section>
       </main>
 
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@graph": [
+            { "@type": "Organization", name: "SkillSwap", url: siteUrl },
+            { "@type": "WebSite", name: "SkillSwap", url: siteUrl },
+          ],
+        }}
+      />
       <footer className="border-t border-border bg-background px-5 py-8 text-center text-sm text-muted-foreground">
         <Logo className="mb-2" />
         <p>Teach what you know. Learn what you want.</p>
