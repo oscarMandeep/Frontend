@@ -14,12 +14,10 @@ import {
   MapPin,
   Plus,
   Users,
-  X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { GradientButton } from "@/components/brand/GradientButton";
 import { Logo } from "@/components/brand/Logo";
-import { SkillChip } from "@/components/brand/SkillChip";
 import { Input } from "@/components/ui/input";
 import { isApiError } from "@/lib/api/fetcher";
 import { getGetMeQueryKey, useGetMe } from "@/lib/api/generated/me/me";
@@ -29,20 +27,18 @@ import {
   updateMyAvailability,
   updateMySkills,
 } from "@/lib/api/generated/me/me";
-import type { MeDto, SkillRefDto } from "@/lib/api/generated/model";
+import type { MeDto } from "@/lib/api/generated/model";
 import { cn } from "@/lib/utils";
 import { AvailabilityGrid } from "./AvailabilityGrid";
 import { cellsToSlots, slotsToCells } from "./availability";
-import { LevelPicker } from "./LevelPicker";
 import {
   MODES,
   onboardingSchema,
-  PRIORITIES,
   STEP_FIELDS,
   STEP_TITLES,
   type OnboardingValues,
 } from "./schema";
-import { SkillPicker } from "./SkillPicker";
+import { HavesEditor, WantsEditor } from "./SkillEditors";
 
 const SUGGESTED_LANGUAGES = [
   "English",
@@ -75,12 +71,6 @@ const MODE_CARDS = [
   text: string;
   icon: unknown;
 }[];
-
-const PRIORITY_LABEL = {
-  HIGH: "Really want it",
-  MEDIUM: "Would like it",
-  LOW: "Just curious",
-} as const;
 
 /** Loads the profile first, so the form can start from what was already saved. */
 export function OnboardingFlow() {
@@ -156,24 +146,6 @@ function OnboardingForm({ profile }: { profile: MeDto }) {
       shouldValidate: true,
       shouldDirty: true,
     });
-
-  const addHave = (s: SkillRefDto) =>
-    set("haves", [
-      ...haves,
-      { skillId: s.id, name: s.name, category: s.category, level: 3 },
-    ]);
-  const addWant = (s: SkillRefDto) =>
-    set("wants", [
-      ...wants,
-      {
-        skillId: s.id,
-        name: s.name,
-        category: s.category,
-        currentLevel: 1,
-        goalLevel: 3,
-        priority: "MEDIUM",
-      },
-    ]);
 
   const toggleLanguage = (lang: string) =>
     set(
@@ -283,48 +255,11 @@ function OnboardingForm({ profile }: { profile: MeDto }) {
               <p className="-mt-3 text-muted-foreground">
                 Add skills you could teach a beginner, and how good you are.
               </p>
-              <SkillPicker
-                onPick={addHave}
-                excludeIds={[
-                  ...haves.map((h) => h.skillId),
-                  ...wants.map((w) => w.skillId),
-                ]}
+              <HavesEditor
+                haves={haves}
+                wants={wants}
+                onChange={(v) => set("haves", v)}
               />
-              <ul className="flex flex-col gap-3">
-                {haves.map((h, i) => (
-                  <li
-                    key={h.skillId}
-                    className="rounded-2xl border border-border bg-card p-4"
-                  >
-                    <div className="mb-3 flex items-center justify-between">
-                      <SkillChip category={h.category}>{h.name}</SkillChip>
-                      <button
-                        type="button"
-                        aria-label={`Remove ${h.name}`}
-                        onClick={() =>
-                          set(
-                            "haves",
-                            haves.filter((x) => x.skillId !== h.skillId),
-                          )
-                        }
-                        className="rounded-full p-1 text-muted-foreground hover:bg-muted"
-                      >
-                        <X className="size-4" />
-                      </button>
-                    </div>
-                    <LevelPicker
-                      label="your level"
-                      value={h.level}
-                      onChange={(level) =>
-                        set(
-                          "haves",
-                          haves.map((x, j) => (j === i ? { ...x, level } : x)),
-                        )
-                      }
-                    />
-                  </li>
-                ))}
-              </ul>
             </>
           )}
 
@@ -334,107 +269,11 @@ function OnboardingForm({ profile }: { profile: MeDto }) {
                 Pick what you would love to learn, and the level you are aiming
                 for.
               </p>
-              <SkillPicker
-                onPick={addWant}
-                excludeIds={[
-                  ...haves.map((h) => h.skillId),
-                  ...wants.map((w) => w.skillId),
-                ]}
+              <WantsEditor
+                haves={haves}
+                wants={wants}
+                onChange={(v) => set("wants", v)}
               />
-              <ul className="flex flex-col gap-3">
-                {wants.map((w, i) => (
-                  <li
-                    key={w.skillId}
-                    className="rounded-2xl border border-border bg-card p-4"
-                  >
-                    <div className="mb-3 flex items-center justify-between">
-                      <SkillChip category={w.category}>{w.name}</SkillChip>
-                      <button
-                        type="button"
-                        aria-label={`Remove ${w.name}`}
-                        onClick={() =>
-                          set(
-                            "wants",
-                            wants.filter((x) => x.skillId !== w.skillId),
-                          )
-                        }
-                        className="rounded-full p-1 text-muted-foreground hover:bg-muted"
-                      >
-                        <X className="size-4" />
-                      </button>
-                    </div>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <LevelPicker
-                        label="where you are now"
-                        value={w.currentLevel}
-                        onChange={(currentLevel) =>
-                          set(
-                            "wants",
-                            wants.map((x, j) =>
-                              j === i
-                                ? {
-                                    ...x,
-                                    currentLevel,
-                                    goalLevel: Math.max(
-                                      x.goalLevel,
-                                      currentLevel,
-                                    ),
-                                  }
-                                : x,
-                            ),
-                          )
-                        }
-                      />
-                      <LevelPicker
-                        label="your goal"
-                        value={w.goalLevel}
-                        onChange={(goalLevel) =>
-                          set(
-                            "wants",
-                            wants.map((x, j) =>
-                              j === i
-                                ? {
-                                    ...x,
-                                    goalLevel,
-                                    currentLevel: Math.min(
-                                      x.currentLevel,
-                                      goalLevel,
-                                    ),
-                                  }
-                                : x,
-                            ),
-                          )
-                        }
-                      />
-                    </div>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {PRIORITIES.map((p) => (
-                        <button
-                          key={p}
-                          type="button"
-                          aria-pressed={w.priority === p}
-                          onClick={() =>
-                            set(
-                              "wants",
-                              wants.map((x, j) =>
-                                j === i ? { ...x, priority: p } : x,
-                              ),
-                            )
-                          }
-                          className={cn(
-                            "rounded-full border px-3 py-1 text-[13px] font-semibold transition-colors",
-                            w.priority === p
-                              ? "bg-brand-gradient border-transparent text-white"
-                              : "border-border text-muted-foreground hover:bg-muted",
-                          )}
-                        >
-                          {PRIORITY_LABEL[p]}
-                        </button>
-                      ))}
-                    </div>
-                  </li>
-                ))}
-              </ul>
             </>
           )}
 

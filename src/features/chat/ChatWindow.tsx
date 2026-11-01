@@ -16,6 +16,7 @@ import { useGetMe } from "@/lib/api/generated/me/me";
 import { useGetMatch } from "@/lib/api/generated/matches/matches";
 import { clock, dayLabel } from "@/lib/time";
 import { cn } from "@/lib/utils";
+import { SafetyMenu } from "@/features/safety/SafetyMenu";
 import { SlotPicker } from "@/features/sessions/SlotPicker";
 import { useChat, type ChatItem } from "./useChat";
 
@@ -214,6 +215,7 @@ export function ChatWindow({ matchId }: { matchId: string }) {
           <CalendarPlus className="size-4 text-brand" />
           <span className="hidden sm:inline">Schedule</span>
         </button>
+        {other && <SafetyMenu matchId={matchId} person={other} />}
       </header>
 
       <div
