@@ -47,7 +47,8 @@ export interface ErrorPayload {
 }
 
 /** What every acknowledgement looks like: success with data, or a machine code. */
-export type Ack<T extends object = object> = ({ ok: true } & T) | { ok: false; code: string };
+export type Ack<T extends object = object> =
+  ({ ok: true } & T) | { ok: false; code: string };
 
 export interface MatchRefPayload {
   matchId: string;
@@ -97,12 +98,21 @@ export interface ServerToClientEvents {
 
 /** client -> server */
 export interface ClientToServerEvents {
-  [ClientEvents.MatchJoin]: (payload: MatchRefPayload, ack: (r: Ack) => void) => void;
-  [ClientEvents.MatchLeave]: (payload: MatchRefPayload, ack: (r: Ack) => void) => void;
+  [ClientEvents.MatchJoin]: (
+    payload: MatchRefPayload,
+    ack: (r: Ack) => void,
+  ) => void;
+  [ClientEvents.MatchLeave]: (
+    payload: MatchRefPayload,
+    ack: (r: Ack) => void,
+  ) => void;
   [ClientEvents.ChatSend]: (
     payload: ChatSendPayload,
     ack: (r: Ack<{ message: MessageDto }>) => void,
   ) => void;
   [ClientEvents.ChatTyping]: (payload: ChatTypingPayload) => void;
-  [ClientEvents.ChatRead]: (payload: ChatReadPayload, ack: (r: Ack) => void) => void;
+  [ClientEvents.ChatRead]: (
+    payload: ChatReadPayload,
+    ack: (r: Ack) => void,
+  ) => void;
 }
