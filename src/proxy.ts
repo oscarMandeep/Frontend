@@ -21,7 +21,10 @@ export function proxy(req: NextRequest) {
   }
   // Already signed in: skip the front door.
   const path = req.nextUrl.pathname;
-  if (hasSession && (path === "/" || path === "/login")) {
+  if (
+    hasSession &&
+    (path === "/" || path === "/login" || path === "/register")
+  ) {
     return NextResponse.redirect(new URL("/discover", req.url));
   }
   return NextResponse.next();

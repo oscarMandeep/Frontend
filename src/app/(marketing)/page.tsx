@@ -9,7 +9,6 @@ import {
   Users,
 } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
-import { SignInPanel } from "@/components/auth/SignInPanel";
 import { HeroCards } from "@/components/marketing/HeroCards";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -72,6 +71,27 @@ const PERKS = [
   },
 ];
 
+function Cta({ className }: { className?: string }) {
+  return (
+    <div
+      className={`flex w-full max-w-sm flex-col gap-3 sm:flex-row ${className ?? ""}`}
+    >
+      <Link
+        href="/register"
+        className="flex h-14 flex-1 items-center justify-center rounded-full bg-white px-6 text-[15px] font-bold text-[#21262e] shadow-lg transition hover:scale-[1.02] hover:shadow-xl"
+      >
+        Get started free
+      </Link>
+      <Link
+        href="/login"
+        className="flex h-14 flex-1 items-center justify-center rounded-full border-2 border-white/70 px-6 text-[15px] font-bold text-white transition hover:bg-white/15"
+      >
+        Log in
+      </Link>
+    </div>
+  );
+}
+
 export default async function LandingPage() {
   const stats = await getStats();
   const numbers = stats
@@ -129,7 +149,7 @@ export default async function LandingPage() {
               SkillSwap matches you with people who teach what you want to
               learn, and want what you can teach. Swipe, match, chat, learn.
             </p>
-            <SignInPanel className="mt-8" />
+            <Cta className="mt-8" />
             <p className="mt-4 text-sm text-white/80">
               Free to join. Your email is never shown to anyone.
             </p>
@@ -227,7 +247,7 @@ export default async function LandingPage() {
             <h2 className="text-3xl font-extrabold sm:text-4xl">
               Your next skill is one swipe away.
             </h2>
-            <SignInPanel className="mt-8" />
+            <Cta className="mt-8" />
           </div>
         </section>
       </main>
