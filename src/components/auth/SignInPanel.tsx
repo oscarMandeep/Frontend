@@ -8,10 +8,12 @@ import { cn } from "@/lib/utils";
 const isDev = process.env.NODE_ENV === "development";
 
 // Seeded people, so one developer can sign in as two users in two browsers.
+// Demo and Aarav can match each other (Python <-> Guitar). Demo and Diya already
+// have a match with messages, so the chat has something in it.
 const DEV_USERS = [
-  { email: "demo@skillswap.dev", label: "Demo" },
-  { email: "aarav@skillswap.dev", label: "Aarav" },
-  { email: "diya@skillswap.dev", label: "Diya" },
+  { email: "demo@skillswap.dev", label: "Demo", hint: "teaches Python" },
+  { email: "aarav@skillswap.dev", label: "Aarav", hint: "teaches Guitar" },
+  { email: "diya@skillswap.dev", label: "Diya", hint: "teaches Spanish" },
 ];
 
 function GoogleMark() {
@@ -93,16 +95,26 @@ export function SignInPanel({ className }: { className?: string }) {
                 type="button"
                 disabled={busy !== null}
                 onClick={() => devLogin(u.email)}
-                className="flex h-10 items-center justify-center rounded-full bg-white/20 text-sm font-bold text-white transition hover:bg-white/30 disabled:opacity-60"
+                className="flex h-12 items-center justify-center rounded-2xl bg-white/20 text-sm font-bold text-white transition hover:bg-white/30 disabled:opacity-60"
               >
                 {busy === u.email ? (
                   <Loader2 className="size-4 animate-spin" />
                 ) : (
-                  u.label
+                  <span className="flex flex-col leading-tight">
+                    {u.label}
+                    <span className="text-[10px] font-medium text-white/80">
+                      {u.hint}
+                    </span>
+                  </span>
                 )}
               </button>
             ))}
           </div>
+          <p className="mt-2 text-center text-[11px] text-white/85">
+            Test a match: log in as Demo and swipe right on Aarav, then open a
+            second browser (or a private window) as Aarav and swipe right on
+            Demo.
+          </p>
         </div>
       )}
 
